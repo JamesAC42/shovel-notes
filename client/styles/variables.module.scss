@@ -1,0 +1,84 @@
+@mixin center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin fixed-center {
+  position: fixed;
+  @include center;
+}
+
+@mixin abs-center {
+    position: absolute;
+    @include center;
+}
+
+@mixin flex-center {
+    display:flex;
+    align-items:center;
+    justify-content: center;
+}
+
+@mixin flex-center-row {
+    @include flex-center;
+    flex-direction: row;
+}
+
+@mixin flex-center-col {
+    @include flex-center;
+    flex-direction: column;
+}
+
+@mixin fade-in {
+    animation: fade-in 0.2s linear 1;
+}
+
+@keyframes fade-in {
+    0% {
+        opacity:0;
+    }
+    100% {
+        opacity:1;
+    }
+}
+
+@keyframes slide-fade-in-animation {
+    0% {
+        transform:translateY(10rem);
+        transform:translateY(50%);
+        //opacity:0;
+    }
+    100% {
+        transform:translateY(0);
+        //opacity:1;
+    }
+}
+
+@keyframes slide-fade-in-translucent-animation {
+    0% {
+        transform:translateY(10rem);
+        transform:translateY(50%);
+        opacity:0;
+    }
+    100% {
+        transform:translateY(0);
+        opacity:0.5;
+    }
+}
+
+@mixin slide-fade-in {
+    animation: slide-fade-in-animation 0.2s cubic-bezier(0.075, 0.82, 0.165, 1) 1;
+}
+@mixin slide-fade-in-translucent {
+    animation: slide-fade-in-translucent-animation 0.2s cubic-bezier(0.075, 0.82, 0.165, 1) 1;
+}
+
+@mixin theme-scrollbar {
+    scrollbar-color: var(--secondary-color) var(--background-dark);
+    scrollbar-width: thin;
+}
+
+@mixin cover {
+    background:#00000077;
+}

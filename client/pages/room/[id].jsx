@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
+import ThemePicker from '../../components/ThemePicker';
+import CustomThemePicker from '../../components/CustomThemePicker';
+
 const Room = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -20,8 +23,9 @@ const Room = () => {
   }, [id]);
 
   return (
-    <div>
-      <h1>Room {id}</h1>
+    <div class>
+      <ThemePicker />
+      <CustomThemePicker />
     </div>
   );
 };

@@ -17,66 +17,7 @@ body {
 }
 
 body {
-  background-color: #1a1a1a;
   font-family: 'GeistMono', monospace;
-  color: #f0f0f0;
-  padding:0 1rem;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
-
-// Common input and textarea styles
-input, textarea {
-  background-color: #2a2a2a;
-  color: #f0f0f0;
-  border: 1px solid #444;
-  border-radius: 4px;
-  padding: 0.5rem;
-  font-family: 'GeistMono', monospace;
-  width: 100%;
-  box-sizing: border-box;
-  transition: border-color 0.3s, box-shadow 0.3s;
-
-  &:focus {
-    outline: none;
-    border-color: #00ff9d;
-    box-shadow: 0 0 0 2px rgba(0, 255, 157, 0.2), 0 0 10px rgba(0, 255, 157, 0.1);
-  }
-}
-
-textarea {
-  padding: 1rem;
-}
-
-// Common button styles
-button {
-  background-color: #3a3a3a;
-  color: #f0f0f0;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-family: 'GeistMono', monospace;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #4a4a4a;
-  }
-}
-
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  box-sizing: border-box;
-}
-
-.container {
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
-}
-// Add more global styles as needed
-
-// Add more global styles as needed
