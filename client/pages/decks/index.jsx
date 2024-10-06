@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { DeckList, NotesInput, FlashcardList } from '../components';
-import { Deck } from '../types/deck';
-import { Flashcard } from '../types/flashcard';
+import { DeckList, NotesInput, FlashcardList } from '../../components/deck';
 import axios from 'axios';
-import StudyMode from '../components/StudyMode';
+import StudyMode from '../../components/deck/StudyMode';
 
-const Home: React.FC = () => {
-  const [decks, setDecks] = useState<Deck[]>([]);
-  const [selectedDeckId, setSelectedDeckId] = useState<string | null>(null);
+const Home = () => {
+  const [decks, setDecks] = useState([]);
+  const [selectedDeckId, setSelectedDeckId] = useState(null);
   const [isStudyMode, setIsStudyMode] = useState(false);
-  const [deckNotes, setDeckNotes] = useState<{ [key: string]: string }>({});
+  const [deckNotes, setDeckNotes] = useState({});
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -19,7 +17,6 @@ const Home: React.FC = () => {
           const fetchedDecks = await response.json();
           setDecks(fetchedDecks);
           
-          // Create an object to store notes for each deck
           const notesObj = fetchedDecks.reduce((acc, deck) => {
             acc[deck.id] = deck.notes || '';
             return acc;
@@ -38,7 +35,7 @@ const Home: React.FC = () => {
 
   const selectedDeck = decks.find(deck => deck.id === selectedDeckId);
 
-  const handleUpdateFlashcard = async (updatedFlashcard: Flashcard) => {
+  const handleUpdateFlashcard = async (updatedFlashcard) => {
     if (selectedDeck) {
       try {
         await axios.put(`/flashcards/api/decks/${selectedDeck.id}/flashcards/${updatedFlashcard.id}`, updatedFlashcard);
@@ -54,7 +51,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleDeleteFlashcard = async (id: string) => {
+  const handleDeleteFlashcard = async (id) => {
     if (selectedDeck) {
       try {
         await axios.delete(`/flashcards/api/decks/${selectedDeck.id}/flashcards/${id}`);
@@ -70,7 +67,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleAddFlashcard = async (newFlashcard: Omit<Flashcard, 'id'>) => {
+  const handleAddFlashcard = async (newFlashcard) => {
     if (selectedDeck) {
       try {
         const response = await axios.post(`/flashcards/api/decks/${selectedDeck.id}/flashcards`, newFlashcard);
@@ -87,24 +84,24 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleFlashcardsGenerated = (newFlashcards: Flashcard[]) => {
+  const handleFlashcardsGenerated = (newFlashcards) => {
     if (selectedDeck) {
       const updatedDecks = decks.map(deck =>
         deck.id === selectedDeck.id
-          ? { ...deck, flashcards: newFlashcards } // Replace all flashcards
+          ? { ...deck, flashcards: newFlashcards }
           : deck
       );
       setDecks(updatedDecks);
     }
   };
 
-  const handleCreateDeck = async (name: string) => {
+  const handleCreateDeck = async (name) => {
     try {
       const response = await axios.post('/flashcards/api/decks', { name });
-      const newDeck: Deck = response.data;
+      const newDeck = response.data;
       setDecks([...decks, newDeck]);
-      setSelectedDeckId(newDeck.id); // Automatically select the new deck
-      setIsStudyMode(false); // Ensure we're not in study mode
+      setSelectedDeckId(newDeck.id);
+      setIsStudyMode(false);
     } catch (error) {
       console.error('Failed to create deck:', error);
     }
@@ -114,7 +111,7 @@ const Home: React.FC = () => {
     setIsStudyMode(false);
   };
 
-  const handleDeckUpdate = async (deckId: string, updates: { name?: string; notes?: string }) => {
+  const handleDeckUpdate = async (deckId, updates) => {
     try {
       const response = await axios.put(`/flashcards/api/decks/${deckId}`, updates);
       const updatedDeck = response.data;
@@ -131,7 +128,7 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleDeleteDeck = async (deckId: string) => {
+  const handleDeleteDeck = async (deckId) => {
     try {
       await axios.delete(`/flashcards/api/decks/${deckId}`);
       setDecks(decks.filter(deck => deck.id !== deckId));
@@ -178,7 +175,7 @@ const Home: React.FC = () => {
           flashcards={selectedDeck.flashcards}
           onUpdateFlashcard={handleUpdateFlashcard}
           onExitStudyMode={handleExitStudyMode}
-          deckName={selectedDeck.name} // Add this line
+          deckName={selectedDeck.name}
         />
       )}
     </div>

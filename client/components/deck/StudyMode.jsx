@@ -1,24 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../styles/StudyMode.module.scss';
-import { Flashcard } from '../types/flashcard';
+import styles from '../../styles/deck/StudyMode.module.scss';
 
-interface StudyModeProps {
-  flashcards: Flashcard[];
-  onUpdateFlashcard: (updatedFlashcard: Flashcard) => void;
-  onExitStudyMode: () => void;
-  deckName: string; // Add this new prop
-}
-
-const StudyMode: React.FC<StudyModeProps> = ({
+const StudyMode = ({
   flashcards,
   onUpdateFlashcard,
   onExitStudyMode,
-  deckName, // Add this new prop
+  deckName,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [filterMode, setFilterMode] = useState<'all' | 'starred' | 'learned' | 'unlearned'>('all');
-  const [filteredFlashcards, setFilteredFlashcards] = useState<Flashcard[]>(flashcards);
+  const [filterMode, setFilterMode] = useState('all');
+  const [filteredFlashcards, setFilteredFlashcards] = useState(flashcards);
 
   useEffect(() => {
     const filtered = flashcards.filter(card => {

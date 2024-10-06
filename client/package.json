@@ -10,16 +10,13 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
-    "lodash": "^4.17.21",
-    "next": "14.2.13",
+    "next": "^13.4.19",
     "react": "^18",
     "react-dom": "^18",
-    "sass": "^1.79.4",
-    "styled-components": "^6.1.13"
+    "sass": "^1.79.4"
   },
   "devDependencies": {
     "@types/node": "22.7.4",
-    "@types/react": "18.3.10",
-    "typescript": "5.6.2"
+    "@types/react": "18.3.10"
   }
 }

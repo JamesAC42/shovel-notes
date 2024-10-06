@@ -1,28 +1,19 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import styles from '../styles/FlashcardList.module.scss';
-import { Flashcard } from '../types/flashcard';
+import styles from '../../styles/deck/FlashcardList.module.scss';
 
-interface FlashcardListProps {
-  flashcards: Flashcard[];
-  onUpdateFlashcard: (updatedFlashcard: Flashcard) => void;
-  onDeleteFlashcard: (id: string) => void;
-  onAddFlashcard: (newFlashcard: Omit<Flashcard, 'id'>) => void;
-  onEnterStudyMode: () => void;
-}
-
-const FlashcardList: React.FC<FlashcardListProps> = ({
+const FlashcardList = ({
   flashcards,
   onUpdateFlashcard,
   onDeleteFlashcard,
   onAddFlashcard,
   onEnterStudyMode,
 }) => {
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingFlashcard, setEditingFlashcard] = useState<Flashcard | null>(null);
-  const [newFlashcard, setNewFlashcard] = useState<Omit<Flashcard, 'id'>>({ front: '', back: '', learned: false, starred: false });
+  const [editingId, setEditingId] = useState(null);
+  const [editingFlashcard, setEditingFlashcard] = useState(null);
+  const [newFlashcard, setNewFlashcard] = useState({ front: '', back: '', learned: false, starred: false });
   const [isMobile, setIsMobile] = useState(false);
 
-  const handleEdit = useCallback((flashcard: Flashcard) => {
+  const handleEdit = useCallback((flashcard) => {
     setEditingId(flashcard.id);
     setEditingFlashcard(flashcard);
   }, []);
@@ -40,7 +31,7 @@ const FlashcardList: React.FC<FlashcardListProps> = ({
     setEditingFlashcard(null);
   }, []);
 
-  const handleDelete = useCallback((id: string) => {
+  const handleDelete = useCallback((id) => {
     onDeleteFlashcard(id);
   }, [onDeleteFlashcard]);
 
@@ -53,7 +44,7 @@ const FlashcardList: React.FC<FlashcardListProps> = ({
 
   const AutoExpandTextarea = useMemo(() => {
     return ({ value, onChange, placeholder }) => {
-      const textareaRef = useRef<HTMLTextAreaElement>(null);
+      const textareaRef = useRef(null);
 
       useEffect(() => {
         if (textareaRef.current) {
@@ -74,11 +65,11 @@ const FlashcardList: React.FC<FlashcardListProps> = ({
     };
   }, []);
 
-  const handleEditingFlashcardChange = useCallback((field: 'front' | 'back', value: string) => {
+  const handleEditingFlashcardChange = useCallback((field, value) => {
     setEditingFlashcard(prev => prev ? { ...prev, [field]: value } : null);
   }, []);
 
-  const handleNewFlashcardChange = useCallback((field: 'front' | 'back', value: string) => {
+  const handleNewFlashcardChange = useCallback((field, value) => {
     setNewFlashcard(prev => ({ ...prev, [field]: value }));
   }, []);
 

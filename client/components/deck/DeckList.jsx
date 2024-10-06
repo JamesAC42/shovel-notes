@@ -1,18 +1,9 @@
 import React, { useState } from 'react';
-import styles from '../styles/DeckList.module.scss';
+import styles from '../../styles/deck/DeckList.module.scss';
 
-interface DeckListProps {
-  decks: { id: string; name: string }[];
-  onSelectDeck: (id: string) => void;
-  onCreateDeck: (name: string) => void;
-  onDeleteDeck: (id: string) => void;
-  onUpdateDeck: (id: string, name: string) => void;
-  selectedDeckId: string | null;
-}
-
-const DeckList: React.FC<DeckListProps> = ({ decks, onSelectDeck, onCreateDeck, onDeleteDeck, onUpdateDeck, selectedDeckId }) => {
+const DeckList = ({ decks, onSelectDeck, onCreateDeck, onDeleteDeck, onUpdateDeck, selectedDeckId }) => {
   const [newDeckName, setNewDeckName] = useState('');
-  const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
+  const [editingDeckId, setEditingDeckId] = useState(null);
   const [editingDeckName, setEditingDeckName] = useState('');
 
   const handleCreateDeck = () => {
@@ -22,7 +13,7 @@ const DeckList: React.FC<DeckListProps> = ({ decks, onSelectDeck, onCreateDeck, 
     }
   };
 
-  const handleEditDeck = (id: string, currentName: string) => {
+  const handleEditDeck = (id, currentName) => {
     setEditingDeckId(id);
     setEditingDeckName(currentName);
   };

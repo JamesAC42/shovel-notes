@@ -31,3 +31,5 @@ Thumbs.db
 /database/flashcards.json
 
 package-lock.json
+env.json
+psql.json

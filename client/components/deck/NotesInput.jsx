@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import styles from '../styles/NotesInput.module.scss';
+import styles from '../../styles/deck/NotesInput.module.scss';
 
-interface NotesInputProps {
-  deckId: string;
-  initialNotes: string;
-  onNotesUpdate: (updatedNotes: string) => void;
-  onFlashcardsGenerated: (newFlashcards: any[]) => void;
-}
-
-const NotesInput: React.FC<NotesInputProps> = ({ deckId, initialNotes, onNotesUpdate, onFlashcardsGenerated }) => {
+const NotesInput = ({ deckId, initialNotes, onNotesUpdate, onFlashcardsGenerated }) => {
   const [notes, setNotes] = useState(initialNotes);
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
@@ -18,7 +11,7 @@ const NotesInput: React.FC<NotesInputProps> = ({ deckId, initialNotes, onNotesUp
     setHasChanges(false);
   }, [initialNotes, deckId]);
 
-  const handleNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleNotesChange = (e) => {
     setNotes(e.target.value);
     setHasChanges(e.target.value !== initialNotes);
   };

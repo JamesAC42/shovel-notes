@@ -1,8 +1,8 @@
-@import "Home.module.scss";
+@import "theme.scss";
 
 @font-face {
   font-family: "GeistMono";
-  src: url("../app/fonts/GeistMonoVF.woff") format("woff");
+  src: url("../public/fonts/GeistMono.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -62,5 +62,21 @@ button {
     background-color: #4a4a4a;
   }
 }
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+// Add more global styles as needed
 
 // Add more global styles as needed

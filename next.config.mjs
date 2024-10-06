@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '',
   async rewrites() {
     return [
       {
@@ -21,7 +22,6 @@ const nextConfig = {
       },
     ];
   },
-  // Add this configuration
   webpack: (config, { isServer }) => {
     config.resolve.fallback = { fs: false };
     config.resolve.symlinks = false;
