@@ -12,7 +12,7 @@ import Popup from './Popup';
 import ThemeContext from '../contexts/ThemeContext';
 import ViewContext from '../contexts/ViewContext';
 
-function ThemePicker() {
+function ThemePicker({invert}) {
 
     const {theme, setTheme} = useContext(ThemeContext);
     const {view, setView} = useContext(ViewContext);
@@ -47,7 +47,9 @@ function ThemePicker() {
 
     return (
         <div className={styles.themePicker}>
-            <div onClick={() => setShowThemes(!showThemes)}>
+            <div
+                className={`${styles.paintBrush} ${invert ? styles.invert : ""}`} 
+                onClick={() => setShowThemes(!showThemes)}>
                 <FaPaintBrush />
             </div>
             {

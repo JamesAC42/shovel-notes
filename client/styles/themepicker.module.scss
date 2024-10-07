@@ -6,13 +6,21 @@
     width:2rem;
     @include flex-center-row;
     @include theme-scrollbar;
-    svg {
-        font-size:1.2rem;
-        cursor:pointer;
-        color:var(--primary-color);
-        transform:translateY(3px);
-        &:hover {
-            filter:brightness(1.5);
+
+    .paintBrush {
+        svg {
+            font-size:1.2rem;
+            cursor:pointer;
+            color:var(--primary-color);
+            transform:translateY(3px);
+            &:hover {
+                filter:brightness(1.5);
+            }
+        }
+        &.invert {
+            svg {
+                color:var(--background-color);
+            }
         }
     }
     .themes {
@@ -20,7 +28,7 @@
             text-align:center;
             color:var(--primary-color);
         }   
-        animation:expand-requests 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1;
+        animation:pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) 1;
         width:15rem;
         height:20rem;
         border-radius:0.5rem;

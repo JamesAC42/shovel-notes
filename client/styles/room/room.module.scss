@@ -1,0 +1,55 @@
+@import "../variables.module.scss";
+
+.room {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: 'GeistMono', monospace;
+
+    .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background: var(--primary-color);
+        color: var(--background-color);
+        margin: 0.5rem;
+        border-radius: 0.5rem;
+        a {
+            color: var(--background-color);
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+    }
+
+    .contentCover {
+
+        padding:0;
+        padding-left:0.5rem;
+        background:var(--background-slightly-dark);
+        flex-grow: 1;
+        overflow-y: auto;
+
+        box-shadow: 0 0 10px var(--background-dark);
+        
+        .contentOuter {
+    
+            padding: 2rem 0rem;
+            background:var(--background-color);
+            height:calc(100dvh - 4rem);
+            border-radius:1.5rem 0 0 1.5rem;
+            border-right:none;
+    
+        }
+    }
+}

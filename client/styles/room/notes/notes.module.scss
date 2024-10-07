@@ -1,0 +1,53 @@
+@import "../../variables.module.scss";
+
+.notesContentInner {
+    max-width: 90%;
+    margin: 0 auto;
+
+    .notebookInfo {
+        margin-bottom: 2rem;
+
+        .notebookTitle {
+            width: 100%;
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            font-weight: bold;
+            padding: 10px 0;
+            font-family: 'GeistMono', monospace;
+
+            &::placeholder {
+                color: var(--secondary-color);
+            }
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+
+    .notebookContent {
+        border-radius: 8px;
+
+        .notebookTextArea {
+            width: 100%;
+            height: calc(100dvh - 200px);
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+            font-family: 'GeistMono', monospace;
+
+            &::placeholder {
+                color: var(--secondary-color);
+            }
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+}
