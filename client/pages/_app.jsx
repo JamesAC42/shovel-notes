@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }) {
             setTheme('default');
         }
 
-    }, [theme])
+    }, [theme]);
 
     return (
         <ThemeContext.Provider value={{theme, setTheme}}>

@@ -95,3 +95,29 @@
         transform:translateY(0px);
     }
 }
+
+@mixin navigation-section-content {
+    position: relative;
+    width:100%;
+    height:100%;
+    @include flex-center;
+}
+
+@mixin navigation-section-content-inner {
+    width: 64%;
+    max-width:64%;
+    min-width:64%;
+
+    height:85dvh;
+    overflow-y:auto;
+    padding:0.2rem 1rem;
+
+    margin-top:2rem;
+    margin-left:1rem;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) var(--background-dark);
+    h2 {
+        margin:0;
+    }
+}

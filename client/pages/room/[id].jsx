@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import styles from '../../styles/room/room.module.scss';
@@ -6,6 +6,7 @@ import CustomThemePicker from '../../components/CustomThemePicker';
 import ThemePicker from '../../components/ThemePicker';
 import Navigation from '../../components/room/Navigation';
 import { Pages } from '../../constants/Pages';
+import SocketHandler from '../../components/room/SocketHandler';
 
 // Import main content components
 import NotesContent from '../../components/room/notes/NotesContent';
@@ -16,16 +17,28 @@ import TutorContent from '../../components/room/tutor/TutorContent';
 import PlannerContent from '../../components/room/planner/PlannerContent';
 import ChatContent from '../../components/room/chat/ChatContent';
 
+import UserContext from '../../contexts/UserContext';
+import RoomContext from '../../contexts/RoomContext';
+
 const Room = () => {
   const router = useRouter();
   const { id } = router.query;
   const [activeSection, setActiveSection] = useState(Pages.NOTES);
 
+  const {setUserInfo} = useContext(UserContext);
+  const [room, setRoom] = useState({});
+
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const response = await axios.get(`/api/rooms/${id}`);
-        // Handle the response data as needed
+        const response = await axios.get(`/api/room?id=${id}&getUser=true`);
+        if(!response.data.success) {
+          router.push('https://ovel.sh');
+          return;
+        } else {
+          setUserInfo(response.data.userInfo);
+          setRoom(response.data.room);
+        }
       } catch (error) {
         console.error('Error fetching room:', error);
       }
@@ -58,22 +71,27 @@ const Room = () => {
   };
 
   return (
-    <div className={styles.room}>
-      <CustomThemePicker />
+    <RoomContext.Provider value={{room, setRoom}}>
+      <div className={styles.room}>
+        <CustomThemePicker />
 
-      <div className={styles.nav}>
-        <a href={`https://ovel.sh/room/${id}`}>{"<"} Back to Room</a>
-        <ThemePicker invert={true}/>
-      </div>
+        <div className={styles.nav}>
+          <a href={`https://ovel.sh/room/${id}`}>{"<"} Back to Room</a>
+          <ThemePicker invert={true}/>
+        </div>
 
-      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+        <Navigation 
+          activeSection={activeSection} 
+          setActiveSection={setActiveSection} />
 
-      <div className={styles.contentCover}>
-        <div className={styles.contentOuter}>
-          {renderContent()}
+        <div className={styles.contentCover}>
+          <div className={styles.contentOuter}>
+            {renderContent()}
+          </div>
         </div>
       </div>
-    </div>
+      <SocketHandler roomId={id} />
+    </RoomContext.Provider>
   );
 };
 

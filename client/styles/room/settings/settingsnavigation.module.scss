@@ -1,0 +1,19 @@
+@import "../../variables.module.scss";
+
+.navigationSectionContent {
+
+    @include navigation-section-content;
+
+    .navigationSectionContentInner {
+        @include navigation-section-content-inner;
+
+        p {
+            font-size:0.9rem;
+            padding:0;
+            margin:0.3rem 0;
+            span.infoLabel {
+                font-weight:bold;
+            }
+        }
+    }
+}

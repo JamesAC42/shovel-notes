@@ -1,0 +1,12 @@
+@import "../../variables.module.scss";
+
+.navigationSectionContent {
+
+    @include navigation-section-content;
+
+    .navigationSectionContentInner {
+        @include navigation-section-content-inner;
+
+    }
+
+}

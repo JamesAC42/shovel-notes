@@ -3,7 +3,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/flashcards/api/:path*',
+        source: '/api/:path*',
         destination: 'http://localhost:5015/:path*',
       },
     ];

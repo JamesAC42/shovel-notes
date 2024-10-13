@@ -1,17 +1,19 @@
 const express = require('express');
 const session  = require('express-session');
 const RedisStore = require('connect-redis')(session);
+const http = require('http');
 const fs = require('fs').promises;
 const path = require('path');
 const redisConfig = require('./config/redis.json');
 const Redis = require('ioredis');
 const env = require('./config/env.json');
-
-const sequelize = require('./database');
+const { Server } = require('socket.io');
 
 const app = express();
+const httpServer = http.createServer(app);
 const PORT = process.env.PORT || 5015;
 const BACKUP_FILE = path.join(__dirname, 'database', 'flashcards.json');
+const handleConnection = require('./socket');
 
 // Modify the Redis connection setup
 let redis = new Redis({
@@ -32,6 +34,23 @@ app.use(
     },
   })
 );
+
+let io;
+if(env.local) {
+  io = new Server(httpServer, {
+    cors: {
+      origin: '*'
+    }
+  });
+} else {
+  io = new Server(httpServer, {
+  	path:'/socket',
+    cors: {
+        origin: 'https://ovel.sh',
+        methods: ['GET','POST']
+    } 
+  });
+}
 
 // Simple queue implementation
 const queue = [];
@@ -129,6 +148,12 @@ const { updateFlashcard } = require('./controllers/put/decks/updateFlashcard');
 const { updateDeck } = require('./controllers/put/decks/updateDeck');
 const { deleteFlashcard } = require('./controllers/delete/decks/deleteFlashcard');
 const { deleteDeck } = require('./controllers/delete/decks/deleteDeck');
+const { getUser } = require('./controllers/get/user/getUser');
+const { getRoom } = require('./controllers/get/room/getRoom');
+const { deleteNotebookPage } = require('./controllers/delete/notebook/deleteNotebookPage');
+const { renameNotebookPage } = require('./controllers/put/notebook/renameNotebookPage');
+const { createNotebookPage } = require('./controllers/post/notebook/createNotebookPage');
+
 
 // Routes
 app.get('/decks', (req, res) => getDecks(req, res, redis, addToQueue, readDatabase));
@@ -142,11 +167,20 @@ app.put('/decks/:id', (req, res) => updateDeck(req, res, redis, addToQueue));
 app.delete('/decks/:deckId/flashcards/:flashcardId', (req, res) => deleteFlashcard(req, res, redis, addToQueue));
 app.delete('/decks/:id', (req, res) => deleteDeck(req, res, redis, addToQueue));
 
+app.post('/notebook/page', (req, res) => createNotebookPage(req, res, io));
+app.delete('/notebook/page', (req, res) => deleteNotebookPage(req, res, io));
+app.put('/notebook/page', (req, res) => renameNotebookPage(req, res, io));
+
+app.get('/user', getUser);
+app.get('/room', getRoom);
+
+io.on('connection', handleConnection);
+
 // Start the server
 async function startServer() {
   await ensureRedisStructure();
   
-  app.listen(PORT, () => {
+  httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
 }

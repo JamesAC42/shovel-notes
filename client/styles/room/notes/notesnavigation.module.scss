@@ -1,0 +1,84 @@
+@import "../../variables.module.scss";
+
+.navigationSectionContent {
+
+    @include navigation-section-content;
+    position:relative;
+    
+    .fileTree {
+        
+        @include navigation-section-content-inner;
+
+        position: relative;
+        .contextMenu {
+            position: absolute;
+            top:0;
+            left:0;
+        }
+
+        .fileTreeItem {
+
+            position: relative;
+
+            font-size:0.85rem;
+
+            .itemContent {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                border-radius:0.3rem;
+
+                padding:0.1rem 0.3rem;
+
+                position:relative;
+
+                &:hover {
+                    background-color: var(--background-color);
+                    outline:1px solid var(--primary-color);
+                }
+
+                &::after {
+                    content: '';
+                    position:absolute;
+                    top:50%;
+                    left:0;
+                    transform:translate(-100%,-50%);
+                    height:1px;
+                    width:0.5rem;
+                    background-color: var(--secondary-color);
+                }
+
+                .icon {
+                    color: var(--primary-color);
+                    margin-right:0.2rem;
+                    svg {
+                        transform:translateY(2px);
+                    }
+                }
+
+                .name {
+                    flex-grow: 1;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    max-width:70%;
+                    text-overflow: ellipsis;
+                }
+
+                .arrow {
+                    margin-left: auto;
+                    color: var(--primary-color);
+                    svg {
+                        transform:translateY(2px);
+                    }
+                }
+            }
+
+            .nestedContent {
+                position: relative;
+                margin-left:0.3rem;
+                padding-left:0.5rem;
+                border-left:1px solid var(--secondary-color);
+            }
+        }
+    }
+}

@@ -7,69 +7,140 @@
     width: 20dvw;
     min-width: 20rem;
     height: 100dvh;
+    
     .navigationButtons {
 
         position: fixed;
         top:50%;
         left:0;
         transform: translateY(-50%);
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        
+            
         height:fit-content;
         
         z-index:90;
-
-        background:none;
         margin-left:0.5rem;
-        border-radius: 10px;
-        padding: 0.5rem 0.2rem;
 
-        background:var(--background-dark);
+        overflow:hidden;
 
-        transition:all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .navigationButtonsInner {
+            
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+    
+            border-radius: 0.6rem;
+    
+            background:var(--background-dark);
+    
+            transition:all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-        div.navigationButton {
-
-            font-size: 1.1rem;
-            padding: 0.3rem;
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: var(--secondary-color);
-            opacity: 0.7;
-
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-            svg {
-                transform: scale(1.2);
+            div.navigationButtonsSlider {
+                position: absolute;
+                top:0;
+                left:50%;
+                background:var(--primary-color);
+                z-index:-1;
+                border-radius: 0.4rem;
+                pointer-events: none;
             }
-
-            &:hover, &.active {
-                color: var(--primary-color);
-                opacity: 1;
-            }
-        }
-
-        &:hover {
-            background:var(--background-color);
-            outline: 2px solid var(--secondary-color);
-            padding: 1rem 1rem;
-            box-shadow: 0 0 10px var(--glow);
+    
             div.navigationButton {
-                margin:0.2rem 0;
-                color:var(--primary-color);
-                &:hover,&.active {
+    
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items:center;
+    
+                font-size: 1.1rem;
+                padding: 0.3rem;
+                cursor: pointer;
+                transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                color: var(--secondary-color);
+                opacity: 0.7;
+    
+                transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+                .navigationIcon {
                     svg {
-                        transition: transform 0.1s linear;
-                        transform: scale(1.6);
-                        color:var(--glow);
+                        transform: scale(1.2) translateY(2px);
+                    }
+                }
+    
+                .navigationText {
+                    font-size: 0.9rem;
+                    overflow:hidden;
+                    width:0;
+                    max-width:0;
+                    margin-right:auto;
+                    margin-left:0.5rem;
+                    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                }
+    
+                &:hover, &.active {
+                    color: var(--primary-color);
+                    opacity: 1;
+                }
+            }
+    
+            &:hover {
+
+                background:var(--background-color);
+
+                padding:0.5rem 0;
+
+                div.navigationButtonsSlider {
+                    display:block;
+                    background:var(--background-dark);
+                    width:calc(100% - 1rem);
+                    transform: translate(-50%, 0px);
+                    transition: top 0.1s cubic-bezier(0.785, 0.45, 0.15, 0.86);
+                    transition: top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                    height:2.5rem;
+                    z-index:2;
+                }
+                
+                div.navigationButton {
+                    color:var(--primary-color);
+                    gap:0.5rem;
+                    z-index:3;
+                    
+                    padding:0.5rem 1rem;
+
+                    .navigationIcon {
+                        padding-left:0.3rem;
+                    }
+    
+                    .navigationText {
+                        width:auto;
+                        max-width:100%;
+                        flex-grow:1;
+                        padding-right:0.2rem;
+                    }
+    
+                    &:hover,&.active {
+                        .navigationText {
+                            color:var(--glow);
+                        }
+                        .navigationIcon {
+                            svg {
+                                transition: all 0.1s linear;
+                                transform: scale(1.6) translateY(2px);
+                                color:var(--glow);
+                            }
+                        }
                     }
                 }
             }
         }
+
+        &:hover {
+            border-radius:0.6rem;
+            outline: 2px solid var(--secondary-color);
+            box-shadow: 0 0 10px var(--glow);
+        }
+
     }
 
     .navigationInner {
@@ -83,14 +154,14 @@
         .navigationContent {
             position: absolute;
             width: 100%;
+            height: 700%; // 7 sections * 100%
             transition: transform 0.3s ease;
 
             .navigationSection {
                 
                 position: relative;
                 width:100%;
-                height:100dvh;
-                z-index:1;
+                height: calc(100% / 7); // Each section takes 1/7 of the total height
                 background-color: var(--background-dark);
 
                 @include flex-center;
