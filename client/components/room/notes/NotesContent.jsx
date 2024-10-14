@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import styles from '../../../styles/room/notes/notes.module.scss';
+import markdownStyles from '../../../styles/room/notes/markdown-styles.module.css';
 
 import RoomContext from '../../../contexts/RoomContext';
 import renameNotebookPage from '../../../utilities/renameNotebookPage';
@@ -9,6 +10,8 @@ import { PiSwap } from "react-icons/pi";
 
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 const NotesContent = ({ activePage }) => {
 
@@ -133,7 +136,10 @@ const NotesContent = ({ activePage }) => {
                     showPreview ? 
                     (
                         <div className={styles.notebookPreview}>
-                            <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
+                            <Markdown 
+                                className={markdownStyles.reactMarkdown}
+                                remarkPlugins={[remarkGfm, remarkMath]}
+                                rehypePlugins={[rehypeKatex]}>{content}</Markdown>
                         </div>
                     ) : 
                         <textarea 

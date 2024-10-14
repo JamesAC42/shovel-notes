@@ -1,0 +1,27 @@
+.katex {
+    --katex-font-size: 1.3rem;
+    font: normal var(--katex-font-size) KaTeX_Main, Times New Roman, serif !important;
+    color:var(--tag-color);
+}
+
+.katex-display>.katex {
+    font-size: var(--katex-font-size) !important;
+}
+
+.katex-html {
+    font-size: var(--katex-font-size) !important;
+}
+
+.katex-inline {
+    font-size: var(--katex-font-size) !important;
+}
+
+.katex .mord,
+.katex .mbin,
+.katex .mrel,
+.katex .mopen,
+.katex .mclose,
+.katex .mpunct,
+.katex .minner {
+    font-size: inherit !important;
+}

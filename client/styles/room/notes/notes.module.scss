@@ -87,54 +87,13 @@
             line-height: 1.6;
             font-family: 'Geist', monospace;
 
-            font-size: 0.9rem;
+            font-size: 1rem;
 
             scrollbar-width: thin;
             scrollbar-color: var(--secondary-color) var(--background-dark);
 
             * {
                 max-width: 95%; 
-            }
-
-            ul {
-                padding-left: 1.5rem;
-            }
-
-            pre {
-                font-family: 'GeistMono', monospace;
-                background:var(--journal-entry-background);
-                padding:1rem;
-                border-radius: 0.5rem;
-                code {
-                    font-family: 'GeistMono', monospace;
-                    font-size: 0.8rem;
-                }
-            }
-
-            a {
-                color: var(--link-color);
-            }
-
-            table {
-                border-collapse: collapse;
-                margin-bottom: 1rem;
-
-                thead {
-                    background-color: var(--journal-entry-background);
-                    color: var(--primary-color);
-                }
-
-                tbody {
-                    tr {
-                        &:hover {
-                            background-color: var(--background-dark);
-                        }
-                    }
-                }
-                td, th {
-                    padding: 0.8rem;
-                    border: 1px solid var(--background-dark);
-                }
             }
         }
     }

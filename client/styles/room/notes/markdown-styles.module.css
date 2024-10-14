@@ -1,0 +1,39 @@
+.reactMarkdown ul {
+    padding-left: 1.5rem;
+}
+
+.reactMarkdown pre {
+    font-family: 'GeistMono', monospace;
+    background:var(--journal-entry-background);
+    padding:1rem;
+    border-radius: 0.5rem;
+}
+
+.reactMarkdown code {
+    font-family: 'GeistMono', monospace;
+    font-size: 0.8rem;
+}
+
+.reactMarkdown a {
+    color: var(--link-color);
+}
+
+.reactMarkdown table {
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+}
+
+.reactMarkdown table thead {
+    background-color: var(--journal-entry-background);
+    color: var(--primary-color);
+}
+
+
+.reactMarkdown table tbody tr:hover {
+    background-color: var(--background-dark);
+}
+
+.reactMarkdown table td, .reactMarkdown table th {
+    padding: 0.8rem;
+    border: 1px solid var(--background-dark);
+}
