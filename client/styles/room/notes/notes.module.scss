@@ -1,11 +1,14 @@
 @import "../../variables.module.scss";
 
 .notesContentInner {
-    max-width: 90%;
-    margin: 0 auto;
+    
+    width: calc(100% - 5rem);
+    margin: 0 2.5rem;
+
+    position:relative;
 
     .notebookInfo {
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
 
         .notebookTitle {
             width: 100%;
@@ -26,9 +29,33 @@
             }
         }
     }
+    
+    .notebookActions {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        gap: 1rem;
+        margin-bottom:1rem;
+
+        .notebookAction {
+            @include flex-center;
+            padding:0.5rem 2rem;
+            border-radius: 0.5rem;
+            cursor:pointer;
+            border:1px solid var(--background-dark);
+            transition: all 0.2s ease-in-out;
+            color: var(--secondary-color);
+            &:hover {
+                background-color: var(--background-dark);
+                color: var(--primary-color);
+            }
+        }
+    }
 
     .notebookContent {
         border-radius: 8px;
+
+        position:relative;
 
         .notebookTextArea {
             width: 100%;
@@ -36,7 +63,7 @@
             background: none;
             border: none;
             color: var(--primary-color);
-            font-size: 1rem;
+            font-size: 0.9rem;
             line-height: 1.6;
             resize: none;
             font-family: 'GeistMono', monospace;
@@ -50,6 +77,64 @@
 
             &:focus {
                 outline: none;
+            }
+        }
+
+        .notebookPreview {
+            width: 100%;
+            height: calc(100dvh - 200px);
+            overflow-y: auto;
+            line-height: 1.6;
+            font-family: 'Geist', monospace;
+
+            font-size: 0.9rem;
+
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--background-dark);
+
+            * {
+                max-width: 95%; 
+            }
+
+            ul {
+                padding-left: 1.5rem;
+            }
+
+            pre {
+                font-family: 'GeistMono', monospace;
+                background:var(--journal-entry-background);
+                padding:1rem;
+                border-radius: 0.5rem;
+                code {
+                    font-family: 'GeistMono', monospace;
+                    font-size: 0.8rem;
+                }
+            }
+
+            a {
+                color: var(--link-color);
+            }
+
+            table {
+                border-collapse: collapse;
+                margin-bottom: 1rem;
+
+                thead {
+                    background-color: var(--journal-entry-background);
+                    color: var(--primary-color);
+                }
+
+                tbody {
+                    tr {
+                        &:hover {
+                            background-color: var(--background-dark);
+                        }
+                    }
+                }
+                td, th {
+                    padding: 0.8rem;
+                    border: 1px solid var(--background-dark);
+                }
             }
         }
     }

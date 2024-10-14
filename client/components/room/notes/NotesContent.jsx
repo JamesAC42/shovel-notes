@@ -5,7 +5,10 @@ import RoomContext from '../../../contexts/RoomContext';
 import renameNotebookPage from '../../../utilities/renameNotebookPage';
 import updateNotebookPageContent from '../../../utilities/updateNotebookPageContent';
 
+import { PiSwap } from "react-icons/pi";
+
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const NotesContent = ({ activePage }) => {
 
@@ -39,7 +42,7 @@ const NotesContent = ({ activePage }) => {
 
             const pageItem = findPageItem(room.notebook, activePage);
             if(!pageItem) return;
-            
+
             setTitle(pageItem.title);
             setContent(pageItem.content);
             if(pageItem.last_edited_at) {
@@ -73,12 +76,33 @@ const NotesContent = ({ activePage }) => {
         }
     };  
 
+    const handleKeyDown = (e) => {
+        // handle tab and enter 4 spaces
+        if (e.key == 'Tab') {
+            e.preventDefault();
+            var start = e.target.selectionStart;
+            var end = e.target.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            let newContent = content.substring(0, start) +
+              "\t" + content.substring(end);
+            setContent(newContent);
+
+            setTimeout(() => {
+                e.target.selectionStart =
+                  e.target.selectionEnd = start + 1;
+            }, 50);
+            // put caret at right position again
+        }
+    }
+
     if(!activePage) {
         return null;
     }
 
     return (
         <div className={styles.notesContentInner}>
+
             <div className={styles.notebookInfo}>
                 <input
                     type="text"
@@ -94,18 +118,29 @@ const NotesContent = ({ activePage }) => {
                     }
                 </div>
             </div>
+            <div className={styles.notebookActions}>
+                <div
+                    title="Toggle Preview"
+                    onClick={() => {
+                        setShowPreview(!showPreview);
+                    }}
+                    className={styles.notebookAction}>
+                    <PiSwap />
+                </div>
+            </div>
             <div className={styles.notebookContent}>
                 {
                     showPreview ? 
                     (
                         <div className={styles.notebookPreview}>
-                            <Markdown>{content}</Markdown>
+                            <Markdown remarkPlugins={[remarkGfm]}>{content}</Markdown>
                         </div>
                     ) : 
                         <textarea 
                             className={styles.notebookTextArea} 
                             placeholder="Start writing..." 
                             value={content} 
+                            onKeyDown={(e) => handleKeyDown(e)}
                             onChange={(e) => setContent(e.target.value)}
                             onBlur={handleContentBlur}
                         ></textarea>

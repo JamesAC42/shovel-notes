@@ -38,15 +38,15 @@
         padding-left:0.5rem;
         background:var(--background-slightly-dark);
         flex-grow: 1;
-        overflow-y: auto;
+        overflow-y: hidden;
 
         box-shadow: 0 0 10px var(--background-dark);
         
         .contentOuter {
     
-            padding: 2rem 0rem;
+            padding: 1.5rem 0rem;
             background:var(--background-color);
-            height:calc(100dvh - 4rem);
+            height:calc(100dvh - 3rem);
             border-radius:1.5rem 0 0 1.5rem;
             border-right:none;
     
