@@ -43,7 +43,8 @@ const NavigationButton = ({ icon, page, activeSection, setActiveSection, onMouse
   </div>
 );
 
-const Navigation = ({ activeSection, setActiveSection }) => {
+const Navigation = ({ activeSection, setActiveSection, setActivePage }) => {
+
   const navigationContentRef = useRef(null);
   const [sliderOffset, setSliderOffset] = useState(0);
 
@@ -92,7 +93,7 @@ const Navigation = ({ activeSection, setActiveSection }) => {
       <div className={styles.navigationInner}>
         <div className={styles.navigationContent} ref={navigationContentRef}>
           <div className={styles.navigationSection}><SettingsNavigation /></div>
-          <div className={styles.navigationSection}><NotesNavigation /></div>
+          <div className={styles.navigationSection}><NotesNavigation setActivePage={setActivePage} /></div>
           <div className={styles.navigationSection}><DecksNavigation /></div>
           <div className={styles.navigationSection}><QuizzesNavigation /></div>
           <div className={styles.navigationSection}><TutorNavigation /></div>

@@ -64,7 +64,7 @@ async function getRoom(req, res) {
     }
 
     const roomInfo = await getRoomInfo(roomId);
-    let notebook = await getNotebook(roomId, false);
+    let notebook = await getNotebook(roomId, true);
 
     if(notebook.length === 0) {
         const newNotebook = await createNotebook(roomId);

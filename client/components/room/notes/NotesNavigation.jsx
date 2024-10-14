@@ -37,7 +37,7 @@ export const ContextMenuMode = {
   ROOT: "root",
 }
 
-const NotesNavigation = () => {
+const NotesNavigation = ({setActivePage}) => {
 
   const { room } = useContext(RoomContext);
 
@@ -65,6 +65,10 @@ const NotesNavigation = () => {
     e.stopPropagation();
   }
 
+  const handleClick = (e, item) => {
+    setActivePage(item.id);
+  }
+
   const renderFileTree = () => {
     if(!room) return null;
     if(!room.notebook) return null;
@@ -78,6 +82,7 @@ const NotesNavigation = () => {
               item={item}
               level={0}
               onContextMenu={handleContextMenuFromTree}
+              onClick={handleClick}
             />
           ))
     )

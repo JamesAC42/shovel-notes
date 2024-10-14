@@ -4,6 +4,7 @@ import { ContextMenuMode } from './NotesNavigation';
 import axios from 'axios';
 import { useContext, useState, useEffect } from 'react';
 import RoomContext from '../../../contexts/RoomContext';
+import renameNotebookPage from '../../../utilities/renameNotebookPage';
 
 const ContextMenu = ({ position, mode, parent, onClose }) => {
 
@@ -43,17 +44,9 @@ const ContextMenu = ({ position, mode, parent, onClose }) => {
     const handleRename = async () => {
         const newTitle = prompt('Enter new name:');
         if (newTitle) {
-            try {
-                const response = await axios.put('/api/notebook/page', {
-                    pageId: parent.id,
-                    roomId: room.id,
-                    newTitle
-                });
-                if (response.data.success) {
-                    onClose();
-                }
-            } catch (error) {
-                console.error('Error renaming page:', error);
+            const success = await renameNotebookPage(parent.id, room.id, newTitle);
+            if (success) {
+                onClose();
             }
         }
     }

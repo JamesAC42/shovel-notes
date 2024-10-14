@@ -28,6 +28,8 @@ const Room = () => {
   const {setUserInfo} = useContext(UserContext);
   const [room, setRoom] = useState({});
 
+  const [activePage, setActivePage] = useState(null);
+
   useEffect(() => {
     const fetchRoom = async () => {
       try {
@@ -54,7 +56,7 @@ const Room = () => {
       case Pages.SETTINGS:
         return <SettingsContent />;
       case Pages.NOTES:
-        return <NotesContent />;
+        return <NotesContent activePage={activePage} />;
       case Pages.DECKS:
         return <DecksContent />;
       case Pages.QUIZZES:
@@ -82,7 +84,8 @@ const Room = () => {
 
         <Navigation 
           activeSection={activeSection} 
-          setActiveSection={setActiveSection} />
+          setActiveSection={setActiveSection}
+          setActivePage={setActivePage} />
 
         <div className={styles.contentCover}>
           <div className={styles.contentOuter}>

@@ -157,6 +157,9 @@ NotebookPage.belongsTo(Notebook, { foreignKey: 'notebook_id' });
 NotebookPage.hasMany(NotebookPage, { as: 'Children', foreignKey: 'parent_id' });
 NotebookPage.belongsTo(NotebookPage, { as: 'Parent', foreignKey: 'parent_id' });
 
+NotebookPage.belongsTo(User, { as: 'lastEditedByUser', foreignKey: 'last_edited_by' });
+User.hasMany(NotebookPage, { as: 'editedPages', foreignKey: 'last_edited_by' });
+
 User.hasMany(RoomUser, { foreignKey: "user_id" });
 RoomUser.belongsTo(User, { foreignKey: "userId" });
 Room.hasMany(RoomUser, { foreignKey: 'room' });

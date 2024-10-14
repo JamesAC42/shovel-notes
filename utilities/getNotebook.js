@@ -18,7 +18,8 @@ async function getNotebook(roomId, getCollapsed = false) {
                 title: page.title,
                 last_edited_by: page.last_edited_by,
                 last_edited_at: page.last_edited_at,
-                is_folder: page.is_folder
+                is_folder: page.is_folder,
+                children: []
             }));
         } else {
             return await getPages(notebook.id);

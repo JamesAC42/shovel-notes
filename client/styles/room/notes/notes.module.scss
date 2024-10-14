@@ -41,6 +41,9 @@
             resize: none;
             font-family: 'GeistMono', monospace;
 
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--background-dark);
+
             &::placeholder {
                 color: var(--secondary-color);
             }

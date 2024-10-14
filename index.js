@@ -153,6 +153,9 @@ const { getRoom } = require('./controllers/get/room/getRoom');
 const { deleteNotebookPage } = require('./controllers/delete/notebook/deleteNotebookPage');
 const { renameNotebookPage } = require('./controllers/put/notebook/renameNotebookPage');
 const { createNotebookPage } = require('./controllers/post/notebook/createNotebookPage');
+const { updateNotebookPageContent } = require('./controllers/put/notebook/updateNotebookPageContent');
+const { getFolderContent } = require('./controllers/get/notebook/getFolderContent');
+const { getPageContent } = require('./controllers/get/notebook/getPageContent');
 
 
 // Routes
@@ -169,10 +172,14 @@ app.delete('/decks/:id', (req, res) => deleteDeck(req, res, redis, addToQueue));
 
 app.post('/notebook/page', (req, res) => createNotebookPage(req, res, io));
 app.delete('/notebook/page', (req, res) => deleteNotebookPage(req, res, io));
-app.put('/notebook/page', (req, res) => renameNotebookPage(req, res, io));
+app.put('/notebook/renamePage', (req, res) => renameNotebookPage(req, res, io));
+app.put('/notebook/updatePageContent', (req, res) => updateNotebookPageContent(req, res, io));
 
 app.get('/user', getUser);
 app.get('/room', getRoom);
+
+app.get('/notebook/folder/:id', getFolderContent);
+app.get('/notebook/page/:id', getPageContent);
 
 io.on('connection', handleConnection);
 

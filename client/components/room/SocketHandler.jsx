@@ -60,6 +60,21 @@ const SocketHandler = ({roomId}) => {
         }
     }
     
+    const updateNotebookPageContent = (notebook, pageId, content, lastEditedAt, lastEditedBy) => {
+        for(let i = 0; i < notebook.length; i++) {
+            if(notebook[i].id === pageId) {
+                notebook[i].content = content;
+                notebook[i].last_edited_at = lastEditedAt;
+                notebook[i].last_edited_by = lastEditedBy;
+                break;
+            } else {
+                if(notebook[i].children) {
+                    updateNotebookPageContent(notebook[i].children, pageId, content, lastEditedAt, lastEditedBy);
+                }
+            }
+        }
+    }
+
     const reconnectSocket = useCallback(() => {
         if(socketRef.current) return;
     
@@ -93,6 +108,14 @@ const SocketHandler = ({roomId}) => {
             setRoom(prevRoom => {
                 let newRoom = JSON.parse(JSON.stringify(prevRoom));
                 renameNotebookPage(newRoom.notebook, data.pageId, data.newTitle);
+                return newRoom;
+            });
+        });
+
+        newSocket.on('notebookPageContentUpdated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                updateNotebookPageContent(newRoom.notebook, data.pageId, data.content, data.last_edited_at, data.last_edited_by);
                 return newRoom;
             });
         });
