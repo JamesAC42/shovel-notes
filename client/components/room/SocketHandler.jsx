@@ -48,6 +48,10 @@ const SocketHandler = ({roomId}) => {
     }
 
     const addNotebookPage = (notebook, parent, page) => {
+        if(!parent) {
+            notebook.push(page);
+            return;
+        }
         for(let i = 0; i < notebook.length; i++) {
             if(notebook[i].id === parent) {
                 notebook[i].children.push(page);
@@ -91,6 +95,7 @@ const SocketHandler = ({roomId}) => {
         newSocket.on('notebookPageCreated', (data) => {
             setRoom(prevRoom => {
                 let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                console.log(data.page);
                 addNotebookPage(newRoom.notebook, data.page.parent_id, data.page);
                 return newRoom;
             });

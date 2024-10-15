@@ -4,14 +4,19 @@
 
 .reactMarkdown pre {
     font-family: 'GeistMono', monospace;
-    background:var(--journal-entry-background);
-    padding:1rem;
     border-radius: 0.5rem;
+}
+
+.reactMarkdown pre div.codeStyle {
+    scrollbar-width: thin;
+    border-radius: 1.2rem !important;
 }
 
 .reactMarkdown code {
     font-family: 'GeistMono', monospace;
     font-size: 0.8rem;
+    background: none;
+    border-radius: 0.5rem;
 }
 
 .reactMarkdown a {

@@ -104,16 +104,18 @@
 }
 
 @mixin navigation-section-content-inner {
-    width: 64%;
-    max-width:64%;
-    min-width:64%;
+
+    --section-width:70%;
+    width: var(--section-width);
+    max-width:var(--section-width);
+    min-width:var(--section-width);
 
     height:85dvh;
     overflow-y:auto;
-    padding:0.2rem 1rem;
+    padding:0.2rem 0.5rem;
 
     margin-top:2rem;
-    margin-left:1rem;
+    margin-left:1.4rem;
 
     scrollbar-width: thin;
     scrollbar-color: var(--secondary-color) var(--background-dark);

@@ -3,9 +3,14 @@
 .navigationSectionContent {
 
     @include navigation-section-content;
+    position:relative;
 
     .navigationSectionContentInner {
         @include navigation-section-content-inner;
+
+        .createDeck {
+            background:var(--background-color);
+        }
 
     }
 

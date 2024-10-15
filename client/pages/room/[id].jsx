@@ -7,6 +7,7 @@ import ThemePicker from '../../components/ThemePicker';
 import Navigation from '../../components/room/Navigation';
 import { Pages } from '../../constants/Pages';
 import SocketHandler from '../../components/room/SocketHandler';
+import PopupManager from '../../components/PopupManager';
 
 // Import main content components
 import NotesContent from '../../components/room/notes/NotesContent';
@@ -76,6 +77,7 @@ const Room = () => {
     <RoomContext.Provider value={{room, setRoom}}>
       <div className={styles.room}>
         <CustomThemePicker />
+        <PopupManager />
 
         <div className={styles.nav}>
           <a href={`https://ovel.sh/room/${id}`}>{"<"} Back to Room</a>

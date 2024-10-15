@@ -1,0 +1,49 @@
+@import "./variables.module.scss";
+
+
+.actionButton {
+    background:var(--primary-color);
+    color:var(--background-color);
+    border-radius:0.7rem;
+    margin-top:0.4rem;
+    cursor:default;
+    box-shadow:0 0 10px 0px var(--primary-color);
+    border: 1px solid;
+    overflow: hidden;
+    position: relative;
+    opacity:0.8;
+    z-index:110;
+    cursor:pointer;
+    padding:0.4rem 0;
+
+    span {
+        @include flex-center-row;
+        z-index: 20;
+        svg {
+            transform:translateY(0px);
+            margin-left:1rem;
+        }
+    }
+    
+    &:after {
+        background: var(--glow);
+        content: "";
+        height: 155px;
+        left: -75px;
+        opacity: .6;
+        position: absolute;
+        top: -50px;
+        transform: rotate(35deg);
+        transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+        width: 50px;
+        z-index: 20;
+    }
+    
+    &:hover {
+        &:after {
+            left: 120%;
+            transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        outline:2px solid var(--glow);
+    }
+}
