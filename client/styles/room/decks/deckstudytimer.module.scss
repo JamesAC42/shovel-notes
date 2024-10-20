@@ -1,0 +1,10 @@
+@import "../../variables.module.scss";
+
+.deckStudyTimer {
+    font-size:1.2rem;
+    font-weight:600;
+    padding:0.5rem 1rem;
+    background-color:var(--background-dark);
+    margin:0.5rem;
+    border-radius:0.5rem;
+}

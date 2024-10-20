@@ -3,6 +3,7 @@ const getRoomInfo = require('../../../utilities/getRoomInfo');
 const getUsersInRoom = require('../../../utilities/getUsersInRoom');
 const getNotebook = require('../../../utilities/getNotebook');  
 const { createNotebook } = require('../../../utilities/createNotebook');
+const getDecksInRoom = require('../../../utilities/getDecksInRoom');
 async function getRoom(req, res) {
 
     let roomId = req.query.id;
@@ -55,6 +56,21 @@ async function getRoom(req, res) {
 
                 ]
             }
+        ],
+        decks: [
+            {
+                id: 1,
+                name: "Deck 1",
+                flashcards: [
+                    {
+                        id: 1,
+                        front: "What is a survey?",
+                        back: "A questionnaire used to collect data from a large group of people",
+                        is_starred: false,
+                        is_learned: false
+                    }
+                ]
+            }
         ]
     }
     */
@@ -71,12 +87,15 @@ async function getRoom(req, res) {
         notebook = newNotebook.pages;
     }
 
+    let decks = await getDecksInRoom(roomId);
+
     const room = {
         id: roomId,
         name: roomInfo.name,
         public: roomInfo.public,
         users: usersInRoom,
-        notebook: notebook
+        notebook: notebook,
+        decks: decks
     }
 
     const response = {

@@ -1,0 +1,73 @@
+@import "../../variables.module.scss";
+@import "./decks.module.scss";
+
+@keyframes flip {
+    0% {
+        transform:rotateX(1deg) rotateZ(1deg) rotateY(1deg) translateY(-5px);
+    }
+    100% {
+        transform:rotateX(180deg) rotateZ(-1deg) rotateY(-1deg) translateY(-5px);
+    }
+}
+
+@keyframes blur-rotate {
+    0% {
+        filter:blur(0);
+        transform:rotateX(1deg) rotateZ(1deg) rotateY(1deg);
+    }
+    50% {
+        filter:blur(20px);
+    }
+    100% {
+        filter:blur(0);
+        transform:rotateX(-180deg) rotateZ(-1deg) rotateY(-1deg);
+    }
+}
+
+.flashcard {
+    height:20rem;
+    width:40dvw;
+    background:var(--journal-entry-background);
+    border-radius:1rem;
+    border:1px solid var(--background-dark);
+    padding:3rem;
+    @include flex-center;
+    position:relative;
+    cursor:pointer;
+    transition: all 0.1s cubic-bezier(0.68, 0.2, 0.265, 1.3);
+
+    box-shadow: 0 0 1rem 0.2rem var(--background-dark);
+
+    background-image: 
+        linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent calc(1rem - 1px),
+            var(--background-color) calc(1rem - 1px),
+            var(--background-color) 1rem
+        );
+
+    background-size: 100% 1rem;
+
+    background-repeat: repeat-y;
+
+    .flashcardInner {
+        width:calc(100% - 6rem);
+        height:calc(100% - 6rem);
+        @include flex-center;
+        text-align:center;
+        font-size:1.3rem;
+    }
+
+    &.flipping {
+        animation: flip 0.2s ease-in-out;
+        .flashcardInner {
+            animation: blur-rotate 0.2s ease-in-out;
+        }
+    }
+
+    &:hover {
+        transform:rotateX(1deg) rotateZ(1deg) rotateY(1deg) translateY(-5px);
+        box-shadow: 0rem 1.2rem 1.8rem 0.4rem var(--background-dark);
+    }
+}

@@ -138,16 +138,17 @@ async function backupToJson() {
 setInterval(backupToJson, 1000 * 60 * 20);
 
 // Import controllers
-const { getDecks } = require('./controllers/get/decks/getDecks');
-const { getDeck } = require('./controllers/get/decks/getDeck');
-const { createDeck } = require('./controllers/post/decks/createDeck');
-const { addFlashcard } = require('./controllers/post/decks/addFlashcard');
-const { generateFlashcards } = require('./controllers/post/decks/generateFlashcards');
-const { updateDeckNotes } = require('./controllers/put/decks/updateDeckNotes');
-const { updateFlashcard } = require('./controllers/put/decks/updateFlashcard');
-const { updateDeck } = require('./controllers/put/decks/updateDeck');
-const { deleteFlashcard } = require('./controllers/delete/decks/deleteFlashcard');
-const { deleteDeck } = require('./controllers/delete/decks/deleteDeck');
+//const { getDecks } = require('./controllers/get/decks/getDecks');
+//const { getDeck } = require('./controllers/get/decks/getDeck');
+//const { updateDeckNotes } = require('./controllers/put/decks/updateDeckNotes');
+//const { updateFlashcard } = require('./controllers/put/decks/updateFlashcard');
+//const { createDeck } = require('./controllers/post/decks/createDeck');
+//const { addFlashcard } = require('./controllers/post/decks/addFlashcard');
+//const { generateFlashcards } = require('./controllers/post/decks/generateFlashcards');
+//const { updateDeck } = require('./controllers/put/decks/updateDeck');
+//const { deleteFlashcard } = require('./controllers/delete/decks/deleteFlashcard');
+//const { deleteDeck } = require('./controllers/delete/decks/deleteDeck');
+
 const { getUser } = require('./controllers/get/user/getUser');
 const { getRoom } = require('./controllers/get/room/getRoom');
 const { deleteNotebookPage } = require('./controllers/delete/notebook/deleteNotebookPage');
@@ -156,20 +157,20 @@ const { createNotebookPage } = require('./controllers/post/notebook/createNotebo
 const { updateNotebookPageContent } = require('./controllers/put/notebook/updateNotebookPageContent');
 const { getFolderContent } = require('./controllers/get/notebook/getFolderContent');
 const { getPageContent } = require('./controllers/get/notebook/getPageContent');
+const { getAllPages } = require('./controllers/get/notebook/getAllPages');
 
+const { getAllDecksInRoom } = require('./controllers/decks/getAllDecksInRoom');
+const { createDeck } = require('./controllers/decks/createDeck');
+const { renameDeck } = require('./controllers/decks/renameDeck');
+const { deleteDeck } = require('./controllers/decks/deleteDeck');
+const { updateLastStudied } = require('./controllers/decks/updateLastStudied');
+
+const { createFlashcardController } = require('./controllers/flashcards/createFlashcard');
+const { deleteFlashcard } = require('./controllers/flashcards/deleteFlashcard');
+const { updateFlashcard } = require('./controllers/flashcards/updateFlashcard');
+const { getAllFlashcardsInDeck } = require('./controllers/flashcards/getAllFlashcardsInDeck');
 
 // Routes
-app.get('/decks', (req, res) => getDecks(req, res, redis, addToQueue, readDatabase));
-app.get('/decks/:id', (req, res) => getDeck(req, res, redis, addToQueue));
-app.post('/decks', (req, res) => createDeck(req, res, redis, addToQueue));
-app.post('/decks/:id/flashcards', (req, res) => addFlashcard(req, res, redis, addToQueue));
-app.post('/decks/:id/generate-flashcards', (req, res) => generateFlashcards(req, res, redis, addToQueue));
-app.put('/decks/:id/notes', (req, res) => updateDeckNotes(req, res, redis, addToQueue));
-app.put('/decks/:deckId/flashcards/:flashcardId', (req, res) => updateFlashcard(req, res, redis, addToQueue));
-app.put('/decks/:id', (req, res) => updateDeck(req, res, redis, addToQueue));
-app.delete('/decks/:deckId/flashcards/:flashcardId', (req, res) => deleteFlashcard(req, res, redis, addToQueue));
-app.delete('/decks/:id', (req, res) => deleteDeck(req, res, redis, addToQueue));
-
 app.post('/notebook/page', (req, res) => createNotebookPage(req, res, io));
 app.delete('/notebook/page', (req, res) => deleteNotebookPage(req, res, io));
 app.put('/notebook/renamePage', (req, res) => renameNotebookPage(req, res, io));
@@ -180,6 +181,18 @@ app.get('/room', getRoom);
 
 app.get('/notebook/folder/:id', getFolderContent);
 app.get('/notebook/page/:id', getPageContent);
+app.get('/notebook/allPages/:roomId', getAllPages);
+
+app.get('/decks/get', getAllDecksInRoom);
+app.post('/decks/create', (req, res) => createDeck(req, res, io));
+app.post('/decks/delete', (req, res) => deleteDeck(req, res, io));
+app.post('/decks/rename', (req, res) => renameDeck(req, res, io));
+app.post('/decks/updateLastStudied', (req, res) => updateLastStudied(req, res, io));
+
+app.get('/decks/getFlashcardsInDeck', getAllFlashcardsInDeck);
+app.post('/decks/addFlashcard', (req, res) => createFlashcardController(req, res, io));
+app.post('/decks/deleteFlashcard', (req, res) => deleteFlashcard(req, res, io));
+app.post('/decks/updateFlashcard', (req, res) => updateFlashcard(req, res, io));
 
 io.on('connection', handleConnection);
 

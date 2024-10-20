@@ -20,6 +20,7 @@ import ChatContent from '../../components/room/chat/ChatContent';
 
 import UserContext from '../../contexts/UserContext';
 import RoomContext from '../../contexts/RoomContext';
+import ViewContext from '../../contexts/ViewContext';
 
 const Room = () => {
   const router = useRouter();
@@ -30,6 +31,24 @@ const Room = () => {
   const [room, setRoom] = useState({});
 
   const [activePage, setActivePage] = useState(null);
+
+  const {view, setView} = useContext(ViewContext);
+
+  const handleSetActiveSection = (section) => {
+
+    setActiveSection(section);
+    
+    if(section === Pages.DECKS) {
+      if(room.decks.length > 0) {
+        let activeDeck = room.decks[0];
+        setView((prevView) => {
+          let newView = JSON.parse(JSON.stringify(prevView));
+          newView.activeDeck = activeDeck.id;
+          return newView;
+        })
+      }
+    }
+  }
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -86,7 +105,7 @@ const Room = () => {
 
         <Navigation 
           activeSection={activeSection} 
-          setActiveSection={setActiveSection}
+          setActiveSection={handleSetActiveSection}
           setActivePage={setActivePage} />
 
         <div className={styles.contentCover}>

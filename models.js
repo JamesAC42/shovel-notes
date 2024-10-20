@@ -167,11 +167,102 @@ RoomUser.belongsTo(Room, { foreignKey: 'room' });
 
 Notebook.belongsTo(Room, { foreignKey: 'room_id' });
 
+// Deck model
+const Deck = sequelize.define('Deck', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    room: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    last_edited_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    notebook: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    last_edited_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    last_studied_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+    }
+}, {
+    tableName: 'decks',
+    timestamps: false
+});
+
+// Flashcard model
+const Flashcard = sequelize.define('Flashcard', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    deck: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    front: {
+        type: DataTypes.STRING(500),
+        allowNull: true
+    },
+    back: {
+        type: DataTypes.STRING(500),
+        allowNull: true
+    },
+    is_starred: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    is_learned: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+    }
+}, {
+    tableName: 'flashcards',
+    timestamps: false
+});
+
+// Define associations
+Deck.belongsTo(Room, { foreignKey: 'room' });
+Room.hasMany(Deck, { foreignKey: 'room' });
+
+Deck.belongsTo(Notebook, { foreignKey: 'notebook' });
+Notebook.hasMany(Deck, { foreignKey: 'notebook' });
+
+Deck.belongsTo(User, { as: 'lastEditedByUser', foreignKey: 'last_edited_by' });
+User.hasMany(Deck, { as: 'editedDecks', foreignKey: 'last_edited_by' });
+
+Flashcard.belongsTo(Deck, { foreignKey: 'deck' });
+Deck.hasMany(Flashcard, { foreignKey: 'deck' });
+
 // Export models
 module.exports = {
     Notebook,
     NotebookPage,
     User,
     Room,
-    RoomUser
+    RoomUser,
+    Deck,
+    Flashcard
 };

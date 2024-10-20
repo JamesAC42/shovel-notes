@@ -123,3 +123,22 @@
         margin:0;
     }
 }
+
+@mixin cardTextArea {
+    width:calc(100% - 2rem);
+    height:15rem;
+    background: var(--background-dark);
+    border: 1px solid var(--background-dark);
+    box-shadow: 0 0 5px 5px var(--background-dark);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    resize:none;
+    font-size:0.9rem;
+    font-family: 'GeistMono', monospace;
+    color: var(--primary-color);
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) var(--background-dark);
+    &:focus {
+        outline:none;
+    }
+}

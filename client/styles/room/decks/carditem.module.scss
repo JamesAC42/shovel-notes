@@ -1,0 +1,64 @@
+@import "../../variables.module.scss";
+@import "./decks.module.scss";
+
+.cardRow {
+    display: contents;
+
+    .cardRowFront,
+    .cardRowBack,
+    .cardRowActions {
+        background-color: var(--background-dark);
+        padding: 2rem;
+        margin-bottom: 0.5rem;
+        @include zoom-in-appear;
+    }
+
+    .cardRowFront {
+        border-radius: 0.5rem 0 0 0.5rem;
+        border-right: 1px solid var(--background-color);
+    }
+
+    .cardRowActions {
+        border-radius: 0 0.5rem 0.5rem 0;
+    }
+
+    .cardRowFront,
+    .cardRowBack {
+        display: flex;
+        align-items: center;
+        word-wrap: break-word;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        position:relative;
+
+        textarea {
+            @include cardTextArea;
+            height:10rem;
+            border: 1px solid var(--secondary-color);
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+
+    .cardRowActions {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+
+        .cardRowAction {
+            cursor: pointer;
+            @include flex-center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            
+            &:hover {
+                background: var(--primary-color);
+                color: var(--background-color);
+            }
+        }
+    }
+}

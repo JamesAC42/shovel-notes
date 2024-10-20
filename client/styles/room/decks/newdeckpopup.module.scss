@@ -1,0 +1,88 @@
+@import "../../../styles/variables.module.scss";
+
+.newDeckPopup {
+    background: var(--background-color);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--secondary-color);
+    width:60dvw;
+
+    h2 {
+        text-align: center;
+        margin-top:0.2rem;
+        font-size: 1.4rem;
+    }
+
+    .newDeckPopupContent {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap:0.5rem;
+        .deckColumn {
+            background:var(--background-dark);
+            width: 50%;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position:relative;
+
+            h3, p {
+                margin:0;
+                margin-bottom:0.5rem;
+                padding: 0 1rem;
+                text-align: center;
+            }
+
+            .noteSelection {
+                max-height:50dvh;
+                width:calc(100% - 2px - 1rem);
+                overflow-y: auto;
+                scrollbar-width: thin;
+                scrollbar-color: var(--secondary-color) var(--background-color);
+                margin-bottom: 0.5rem;
+                border:1px solid var(--background-color);
+                border-radius: 0.5rem;
+                padding: 0 0.5rem;
+
+                .note {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: flex-start;
+                    margin:0.5rem 0;
+                    gap:0.5rem;
+                    cursor: pointer;
+                    padding: 0.5rem;
+                    border-radius: 0.5rem;
+
+                    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+                    .selectionIndicator {
+                        margin-right:0.2rem;
+                        svg {
+                            transform: scale(1.2) translateY(2px);
+                        }
+                    }
+
+                    .noteTitle {
+                        font-size: 0.9rem;
+                        font-weight: 500;
+                        max-width: 90%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    &:hover, &.selected {
+                        background: var(--primary-color);
+                        color: var(--background-dark);
+                    }
+                }
+            }
+        }
+    }
+}

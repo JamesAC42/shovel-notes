@@ -8,10 +8,92 @@
     .navigationSectionContentInner {
         @include navigation-section-content-inner;
 
-        .createDeck {
-            background:var(--background-color);
+        width:75%;
+        max-width: 75%;
+
+        margin-left:2rem;
+
+        .decksFilter {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap:0.5rem;
         }
 
+        .addDeckHelp {
+            position:absolute;
+            top:20rem;
+            right:0;
+            transform:translate(100%,0);
+            font-size:0.8rem;
+            color:var(--secondary-color);
+            z-index:10000;
+        }
+
+        .decksList {
+            margin-top:1rem;
+            max-height: 75dvh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: var(--secondary-color) var(--background-color);
+            padding:0 0.3rem;
+            .deckItem {
+                border:1px solid var(--secondary-color);
+                background:var(--background-color);
+                border-radius: 0.5rem;
+                padding: 0.5rem;
+                border-radius: 0.2rem;
+                margin-bottom:0.2rem;
+                position:relative;
+                cursor:pointer;
+                
+                transition: all 0.1s cubic-bezier(0.68, 0.2, 0.265, 1.3);
+                
+                .deckItemTitle {
+                    width:100%;
+                    max-width:calc(100% - 1rem);
+                    font-size:0.9rem;
+                    color:var(--primary-color);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .deckItemInfo {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap:0.5rem;
+                    font-size:0.8rem;
+                    margin-top:0.2rem;
+                    color:var(--secondary-color);
+                    .deckItemLastStudied {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                }
+                .deckItemCategory {
+                    position:absolute;
+                    top:0;
+                    right:0;
+                    transform:scale(0.7);
+                    margin:0.2rem;
+                }
+
+                &:hover {
+                    filter: brightness(1.2);
+                    transform: translateX(5px);
+                }
+
+                &.activeDeck {
+                    filter: brightness(1.2);
+                    border-color:var(--primary-color);
+                }
+            }
+        }
     }
 
 }

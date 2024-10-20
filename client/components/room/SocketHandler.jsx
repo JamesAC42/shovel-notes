@@ -2,11 +2,14 @@ import { io } from 'socket.io-client';
 import { useRef, useEffect, useContext, useCallback } from 'react';
 import SocketPath from '../../utilities/SocketPath';
 import RoomContext from '../../contexts/RoomContext';
+import ViewContext from '../../contexts/ViewContext';
 
 const SocketHandler = ({roomId}) => {
+
     const socketRef = useRef(null);
-    const { setRoom } = useContext(RoomContext);
-    
+    const { room, setRoom } = useContext(RoomContext);
+    const { setView } = useContext(ViewContext);
+
     useEffect(() => {
         if(!roomId) return;
         if(socketRef.current) return;
@@ -125,7 +128,111 @@ const SocketHandler = ({roomId}) => {
             });
         });
 
-    }, [roomId]);
+        newSocket.on('deckCreated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+
+                newRoom.decks.push({
+                    ...data.deck, 
+                    flashcards: data.deck.flashcards ? data.deck.flashcards : []
+                });
+
+                return newRoom;
+            });
+        });
+
+        newSocket.on('deckDeleted', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let newActiveDeck = newRoom.decks.length > 0 ? newRoom.decks[0].id : null;
+                if(newActiveDeck === data.deckId && newRoom.decks.length > 1) {
+                    newActiveDeck = newRoom.decks[1].id;
+                }
+
+                console.log("new active deck",newActiveDeck);
+                newRoom.decks = newRoom.decks.filter(deck => deck.id !== data.deckId);
+                
+                setView((prevView) => ({
+                    ...prevView,
+                    activeDeck: newActiveDeck
+                }));
+
+                return newRoom;
+            });
+        });
+
+        newSocket.on('deckRenamed', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                console.log(newRoom);
+                let i = newRoom.decks.findIndex(deck => deck.id === data.deck.id);
+                if(i !== -1) {
+                    newRoom.decks[i].title = data.deck.title;
+                    newRoom.decks[i].last_edited_at = data.deck.last_edited_at;
+                    newRoom.decks[i].last_edited_by = data.last_edited_by_username;
+                }
+                return newRoom;
+            });
+        });
+
+        newSocket.on('deckStudied', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let i = newRoom.decks.findIndex(deck => deck.id === data.deckId);
+                if(i !== -1) {
+                    newRoom.decks[i].last_studied_at = data.lastStudiedAt;
+                }
+                return newRoom;
+            });
+        });
+
+        newSocket.on('flashcardDeleted', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let i = newRoom.decks.findIndex(deck => deck.id === data.deckId);
+                if(i !== -1) {
+                    newRoom.decks[i].flashcards = newRoom.decks[i].flashcards.filter(flashcard => flashcard.id !== data.flashcardId);
+                    newRoom.decks[i].last_edited_at = data.last_edited_at;
+                    newRoom.decks[i].last_edited_by = data.last_edited_by_username;
+                }
+                return newRoom;
+            });
+        });
+
+        newSocket.on('flashcardCreated', (data) => {
+            console.log(data);
+            setRoom(prevRoom => {
+                console.log(data);
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let i = newRoom.decks.findIndex(deck => deck.id === data.deckId);
+                console.log(i);
+                if(i !== -1) {
+                    newRoom.decks[i].flashcards.push(data.flashcard);
+                    newRoom.decks[i].last_edited_at = data.last_edited_at;
+                    newRoom.decks[i].last_edited_by = data.last_edited_by_username;
+                }
+                console.log(newRoom);
+                return newRoom;
+            });
+        });
+
+        newSocket.on('flashcardUpdated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let i = newRoom.decks.findIndex(deck => deck.id === data.deck.id);
+                if(i !== -1) {
+                    let j = newRoom.decks[i].flashcards.findIndex(flashcard => flashcard.id === data.flashcard.id);
+                    if(j !== -1) {
+                        newRoom.decks[i].flashcards[j] = data.flashcard;
+                        newRoom.decks[i].last_edited_at = data.flashcard.last_edited_at;
+                        newRoom.decks[i].last_edited_by = data.last_edited_by_username;
+                    }
+                }
+                return newRoom;
+            });
+        });
+
+    }, [roomId, setView]);
 
     return null;
 }

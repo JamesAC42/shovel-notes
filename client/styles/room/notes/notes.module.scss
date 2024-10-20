@@ -1,14 +1,35 @@
 @import "../../variables.module.scss";
 
+@keyframes slide-in-right {
+    0% {
+        opacity: 0;
+        transform: translateX(1rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@mixin slide-in-right {
+    animation: slide-in-right 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.slideIn {
+    @include slide-in-right;
+}
+
 .notesContentInner {
     
     width: calc(100% - 5rem);
     margin: 0 2.5rem;
 
     position:relative;
+    @include slide-in-right;
 
     .notebookInfo {
         margin-bottom: 1rem;
+
 
         .notebookTitle {
             width: 100%;

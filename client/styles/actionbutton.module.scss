@@ -1,6 +1,5 @@
 @import "./variables.module.scss";
 
-
 .actionButton {
     background:var(--primary-color);
     color:var(--background-color);
@@ -14,7 +13,9 @@
     opacity:0.8;
     z-index:110;
     cursor:pointer;
-    padding:0.4rem 0;
+    padding:0.4rem 1rem;
+
+    user-select: none;
 
     span {
         @include flex-center-row;
@@ -45,5 +46,17 @@
             transition: all 550ms cubic-bezier(0.19, 1, 0.22, 1);
         }
         outline:2px solid var(--glow);
+    }
+
+    &.disabled {
+        filter: grayscale(80%);
+        opacity:0.5;
+        cursor:default;
+        &:hover {
+            &:after {
+                left: -75px;
+            }
+            outline:none;
+        }
     }
 }

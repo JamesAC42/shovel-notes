@@ -15,6 +15,9 @@ const NotesContent = ({ activePage }) => {
   const [lastEditedAt, setLastEditedAt] = useState(null);
   const [lastEditedBy, setLastEditedBy] = useState("");
 
+  const [previousActivePage, setPreviousActivePage] = useState(null);
+  const [showSlideIn, setShowSlideIn] = useState(false);
+
   const [showPreview, setShowPreview] = useState(false);
 
   const findPageItem = (notebook, id, level = 0) => {
@@ -33,6 +36,13 @@ const NotesContent = ({ activePage }) => {
     return null;
   };
 
+  const addSlideInClass = (className) => {
+    if(showSlideIn) {
+        return `${className} ${styles.slideIn}  `;
+    }
+    return className;
+  }
+
   useEffect(() => {
     if (activePage) {
       const pageItem = findPageItem(room.notebook, activePage);
@@ -46,6 +56,14 @@ const NotesContent = ({ activePage }) => {
       if (pageItem.last_edited_by) {
         setLastEditedBy(room.users[pageItem.last_edited_by]);
       }
+    }
+
+    if(activePage !== previousActivePage) {
+      setShowSlideIn(true);
+      setTimeout(() => {
+        setShowSlideIn(false);
+      }, 200);
+      setPreviousActivePage(activePage);
     }
   }, [activePage, room]);
 
@@ -104,7 +122,7 @@ const NotesContent = ({ activePage }) => {
 
   return (
     <div className={styles.notesContentInner}>
-      <div className={styles.notebookInfo}>
+      <div className={addSlideInClass(styles.notebookInfo)}>
         <input
           type="text"
           placeholder="Untitled Notebook"
@@ -121,7 +139,7 @@ const NotesContent = ({ activePage }) => {
             : ""}
         </div>
       </div>
-      <div className={styles.notebookActions}>
+      <div className={addSlideInClass(styles.notebookActions)}>
         <div
           title="Toggle Preview"
           onClick={() => {
@@ -132,7 +150,7 @@ const NotesContent = ({ activePage }) => {
           <PiSwap />
         </div>
       </div>
-      <div className={styles.notebookContent}>
+      <div className={addSlideInClass(styles.notebookContent)}>
         {showPreview ? (
           <div className={styles.notebookPreview}>
             <NotebookMarkdown content={content} />

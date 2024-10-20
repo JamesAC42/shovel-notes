@@ -1,0 +1,224 @@
+@import "../../variables.module.scss";
+@import "./decks.module.scss";
+
+.decksContentHeader {
+    @include flex-center;
+    position:relative;
+    
+    input {
+        width: 80%;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 2.2rem;
+        font-weight: bold;
+        padding: 10px 0;
+        font-family: 'GeistMono', monospace;
+        text-align: center;
+        @include zoom-in-appear;
+
+        transition: all 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+        border-radius: 0.5rem;
+
+        &::placeholder {
+            color: var(--secondary-color);
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            outline:1px solid var(--secondary-color);
+        }
+    }
+
+    .decksContentHeaderActions {
+        position:absolute;
+        top:0;
+        right:0;
+        @include zoom-in-appear;
+        .deleteDeck {
+            cursor: pointer;
+            color: var(--error-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            filter: saturate(0.8);
+            @include flex-center;
+            align-items: center;
+            margin-top:0.5rem;
+            margin-right:1rem;
+
+            .deleteDeckText {
+                margin-left: 0.5rem;
+                overflow:hidden;
+                max-width:0;
+                transition: max-width 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+                white-space: nowrap;
+            }
+
+            svg {
+                transform: scale(1.4);
+            }
+        }
+    }
+}
+
+.deckInfo {
+    @include flex-center;
+    gap:1rem;
+    margin-top:1rem;
+    @include zoom-in-appear;
+    .deckInfoItem {
+        background: var(--background-dark);
+        @include flex-center-col;
+        padding: 0.4rem 1.2rem;
+        border-radius: 0.5rem;
+        font-size:0.9rem;
+        .deckInfoItemTitle {
+            font-weight:bold;
+            color: var(--secondary-color);
+        }
+    }
+}
+
+.deckStudyButton {
+    margin-top: 1rem;
+    position:relative;
+    z-index:1;
+    @include flex-center;
+    @include zoom-in-appear;
+}
+
+.deckAddCardOuter {
+    margin-top:2rem;
+    @include flex-center;
+    .deckAddCardToggleButton, .deckAddCardInner {
+        width:calc(85%);
+        border: 1px solid var(--background-dark);
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .deckAddCardToggleButton {
+        @include flex-center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+        @include zoom-in-appear;
+        &:hover {
+            background-color: var(--background-dark);
+        }
+    }
+
+    @keyframes slideDown {
+        0% {
+            transform:translateY(-1rem);
+            opacity:0;
+        }
+        100% {
+            transform:translateY(0);
+            opacity:1;
+        }
+    }
+
+    .deckAddCardInner {
+        display:flex;
+        flex-direction:row;
+        padding:1rem;
+        gap:1rem;
+        .deckAddCardColumn {
+            flex-grow:1;
+            position:relative;
+            animation: slideDown 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+            .deckAddCardColumnTitle {
+                margin-bottom:0.5rem;
+                font-weight:medium;
+                text-align:center;
+            }
+            .deckAddCardColumnInput {
+                padding:0 0.25rem;
+                textarea {
+                    @include cardTextArea;
+                }
+            }
+        }
+        .deckAddCardActions {
+            width:5rem;
+            @include flex-center-col;
+            gap:1rem;
+            animation: slideDown 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+            .collapseAddCardPopup, .deckAddCardBtn, .clearCardBtn {
+                cursor: pointer;
+                @include flex-center;
+                background: var(--background-dark);
+                border-radius: 0.5rem;
+                padding: 1rem;
+                svg {
+                    transform: scale(1.2);
+                }
+
+                &:hover {
+                    filter:brightness(1.5);
+                    outline:2px solid var(--secondary-color);
+                }
+            }
+
+            .collapseAddCardPopup {
+                background:none;
+                margin-bottom:2rem;
+                svg {
+                    transform: scale(1.6);
+                }
+            }
+
+            .clearCardBtn {
+                color: var(--error-color);
+            }
+        }
+    }
+}
+
+.noCardsOuter {
+    width:calc(85% - 2rem);
+    padding:2rem;
+    margin: 0 auto;
+    margin-top:2rem;
+    text-align:center;
+    font-weight:bold;
+    color: var(--primary-color);
+    border-radius: 0.5rem;
+    border:1px solid var(--background-dark);
+}
+
+.deckCardsOuter {
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr;
+    gap: 0rem;
+    position:relative;
+}
+
+.noActiveDeck {
+    margin-top: 2rem;
+    text-align: center;
+    width:100%;
+    position:relative;
+    height:50dvh;
+    .noActiveDeckMessage {
+        @include flex-center;
+        gap: 1rem;
+        position:absolute;
+        top:4.1rem;
+        left:2rem;
+        font-size:1.3rem;
+    }
+}   
+
+.popIn {
+    @include zoom-in-appear;
+}
