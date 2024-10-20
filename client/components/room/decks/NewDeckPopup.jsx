@@ -7,6 +7,7 @@ import { useContext, useState, useEffect } from "react";
 import RoomContext from "../../../contexts/RoomContext";
 import axios from "axios";
 import ViewContext from "../../../contexts/ViewContext";
+import Loading from "../../Loading";
 
 const NewDeckPopup = () => {
 
@@ -17,6 +18,8 @@ const NewDeckPopup = () => {
     const [notes, setNotes] = useState([]);
     const [selectedNotes, setSelectedNotes] = useState([]);
     const [selectedIds, setSelectedIds] = useState({});
+
+    const [generating, setGenerating] = useState(false);
 
     const closePopup = () => {
         setView((prevView) => {
@@ -38,8 +41,22 @@ const NewDeckPopup = () => {
         }
     }
 
-    const generateDeckFromNotes = () => {
-        console.log("generateDeckFromNotes");
+    const generateDeckFromNotes = async() => {
+        if(selectedNotes.length === 0) {
+            return;
+        }
+        setGenerating(true);
+        let selectedNotesIds = selectedNotes.map((note) => note.id);
+        const response = await axios.post('/api/decks/createFromNotes', { roomId: room.id, notes: selectedNotesIds });
+        setGenerating(false);
+        if(response.data.success) {
+            closePopup();
+            setView((prevView) => {
+                let newView = JSON.parse(JSON.stringify(prevView));
+                newView.activeDeck = response.data.deck.id;
+                return newView;
+            });
+        }
     }
 
     const toggleNoteSelection = (note) => {
@@ -116,7 +133,11 @@ const NewDeckPopup = () => {
                     <ActionButton 
                         onClick={generateDeckFromNotes}
                         text="Generate Deck" 
+                        disabled={generating}
                         icon={<TbPencilPlus />} />
+                    {
+                        generating ? <Loading /> : null
+                    }
                 </div>
             </div>
 

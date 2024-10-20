@@ -164,6 +164,7 @@ const { createDeck } = require('./controllers/decks/createDeck');
 const { renameDeck } = require('./controllers/decks/renameDeck');
 const { deleteDeck } = require('./controllers/decks/deleteDeck');
 const { updateLastStudied } = require('./controllers/decks/updateLastStudied');
+const { createDeckFromNotes } = require('./controllers/decks/createDeckFromNotes');
 
 const { createFlashcardController } = require('./controllers/flashcards/createFlashcard');
 const { deleteFlashcard } = require('./controllers/flashcards/deleteFlashcard');
@@ -185,6 +186,7 @@ app.get('/notebook/allPages/:roomId', getAllPages);
 
 app.get('/decks/get', getAllDecksInRoom);
 app.post('/decks/create', (req, res) => createDeck(req, res, io));
+app.post('/decks/createFromNotes', (req, res) => createDeckFromNotes(req, res, io));
 app.post('/decks/delete', (req, res) => deleteDeck(req, res, io));
 app.post('/decks/rename', (req, res) => renameDeck(req, res, io));
 app.post('/decks/updateLastStudied', (req, res) => updateLastStudied(req, res, io));

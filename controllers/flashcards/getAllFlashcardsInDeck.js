@@ -10,7 +10,6 @@ async function getAllFlashcardsInDeck(req, res) {
     }
 
     const deckId = req.query.deckId;
-    console.log("deckId", deckId);  // This will help debug the issue
     
     if (!deckId) {
       return res.status(400).json({ success: false, message: 'Deck ID is required' });

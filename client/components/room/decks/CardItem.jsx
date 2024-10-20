@@ -92,7 +92,7 @@ const CardItem = ({card}) => {
           {
             editMode ?
             <div className={styles.cardRowAction} onClick={() => undoEdit()}>
-              <FaUndoAlt /> Undo
+              <FaUndoAlt /> Cancel
             </div> : null
           }
           <div 

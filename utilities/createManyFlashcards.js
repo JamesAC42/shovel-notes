@@ -1,5 +1,5 @@
 const { Flashcard } = require('../models');
-const sequelize = require('./database');
+const sequelize = require('../database');
 
 async function createManyFlashcards(deckId, flashcardsData) {
   const t = await sequelize.transaction();
