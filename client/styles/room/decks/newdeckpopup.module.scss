@@ -1,4 +1,5 @@
 @import "../../../styles/variables.module.scss";
+@import "./decks.module.scss";
 
 .newDeckPopup {
     background: var(--background-color);
@@ -7,6 +8,10 @@
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.1);
     border: 2px solid var(--secondary-color);
     width:60dvw;
+
+    overflow:hidden;
+
+    position:relative;
 
     h2 {
         text-align: center;
@@ -82,6 +87,55 @@
                         color: var(--background-dark);
                     }
                 }
+            }
+        }
+    }
+
+    .generatingOverlay {
+        position:absolute;
+        top:0;left:0;
+        height:100%;
+        width:100%;
+        @include flex-center;
+
+        .generatingOverlayBackground {
+            z-index:1000;
+            border-radius: 0.5rem;
+            position:absolute;
+            top:0;left:0;
+            height:100%;
+            width:100%;
+            background:rgba(0,0,0,0.5);
+        }
+
+        .generatingOverlayContent {
+            z-index: 1001;
+            background:var(--background-color);
+            border-radius: 0.5rem;
+            @include flex-center;
+            flex-direction: column;
+            padding:1rem 3rem;
+            box-shadow:0 0 1rem 0.4rem var(--background-color);
+
+            @include zoom-in-appear;
+
+            @keyframes shimmer {
+                to {
+                    background-position: 200% center;
+                }
+            }
+            h2 {
+                background: linear-gradient(
+                    90deg,
+                    var(--glow) 0%,
+                    var(--primary-color) 50%,
+                    var(--glow) 100%
+                );
+                background-size: 200% auto;
+                color: transparent;
+                -webkit-background-clip: text;
+                background-clip: text;
+                animation: shimmer 2s linear infinite;
             }
         }
     }

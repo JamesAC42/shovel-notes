@@ -1,11 +1,9 @@
+import { useEffect } from 'react';
 const Home = () => {
-
-    return (
-        <div>
-            <h1>Home</h1>
-        </div>
-    )
-
+    useEffect(() => {
+        window.location.href = 'https://ovel.sh';
+    }, []);
+    return null;
 }
 
 export default Home;

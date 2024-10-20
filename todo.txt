@@ -1,0 +1,18 @@
+- limit number of note pages to 25 for free users
+- free users get 5 free generations - have to pay after that
+- paid users get 5 generations per day
+- show tutorial for notes
+- paywall generating decks
+- add "coming soon" to other pages
+- add something to the settings page
+- add link to notebook in room
+- add study streak
+- add info for how many generations left user has
+- add popup for new notes feature in rooms
+- send email about new notes
+- update premium page to reflect new features and access to discord
+- make a feedback survey for notes and decks
+
+DONE
+
+- make loading for generating look better - DONE

@@ -55,6 +55,7 @@ const Room = () => {
       try {
         const response = await axios.get(`/api/room?id=${id}&getUser=true`);
         if(!response.data.success) {
+          console.log("Room not found");
           router.push('https://ovel.sh');
           return;
         } else {
@@ -62,6 +63,7 @@ const Room = () => {
           setRoom(response.data.room);
         }
       } catch (error) {
+        router.push('https://ovel.sh');
         console.error('Error fetching room:', error);
       }
     };

@@ -47,15 +47,20 @@ const NewDeckPopup = () => {
         }
         setGenerating(true);
         let selectedNotesIds = selectedNotes.map((note) => note.id);
-        const response = await axios.post('/api/decks/createFromNotes', { roomId: room.id, notes: selectedNotesIds });
-        setGenerating(false);
-        if(response.data.success) {
-            closePopup();
-            setView((prevView) => {
-                let newView = JSON.parse(JSON.stringify(prevView));
-                newView.activeDeck = response.data.deck.id;
-                return newView;
-            });
+        try {
+            const response = await axios.post('/api/decks/createFromNotes', { roomId: room.id, notes: selectedNotesIds });
+            setGenerating(false);
+            if(response.data.success) {
+                closePopup();
+                setView((prevView) => {
+                    let newView = JSON.parse(JSON.stringify(prevView));
+                    newView.activeDeck = response.data.deck.id;
+                    return newView;
+                });
+            }
+        } catch(error) {
+            alert("Error generating deck. Please try again.");
+            setGenerating(false);
         }
     }
 
@@ -111,6 +116,18 @@ const NewDeckPopup = () => {
 
     return (
         <div className={styles.newDeckPopup}>
+
+            {
+                generating ?
+                <div className={styles.generatingOverlay}>
+                    <div className={styles.generatingOverlayBackground} />
+                    <div className={styles.generatingOverlayContent}>
+                        <h2>Generating your deck...</h2>
+                        <Loading/>
+                    </div>
+                </div> : null
+            }
+
             <h2>Create a new deck</h2>
 
             <div className={styles.newDeckPopupContent}>
@@ -135,9 +152,6 @@ const NewDeckPopup = () => {
                         text="Generate Deck" 
                         disabled={generating}
                         icon={<TbPencilPlus />} />
-                    {
-                        generating ? <Loading /> : null
-                    }
                 </div>
             </div>
 
