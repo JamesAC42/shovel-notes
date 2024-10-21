@@ -1,6 +1,6 @@
 @import "../../variables.module.scss";
 
-.settingsContent {
+.chatContent {
     @include flex-center-col;
     height:calc(100dvh - 5rem);
 }

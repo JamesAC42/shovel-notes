@@ -6,6 +6,7 @@ const QuizzesNavigation = () => {
     <div className={styles.navigationSectionContent}>
         <div className={styles.navigationSectionContentInner}>
             <h2>Quizzes</h2>
+            <p>Generate tests, quizzes, and other types of evaluations based on your notes. Coming soon!</p>
         </div>
     </div>
   );

@@ -11,7 +11,12 @@ async function getUserDataFromUsername(username) {
       return null;
     }
 
-    return user.toJSON();
+    let userData = user.toJSON();
+    if(!userData.tier) {
+      userData.tier = 1;
+    }
+    
+    return userData;
   } catch (error) {
     console.error('Error fetching user data:', error);
     throw error;

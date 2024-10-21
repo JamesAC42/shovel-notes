@@ -1,6 +1,6 @@
 @import "../../variables.module.scss";
 
-.settingsContent {
+.plannerContent {
     @include flex-center-col;
     height:calc(100dvh - 5rem);
 }

@@ -87,6 +87,10 @@ const NotesContent = ({ activePage }) => {
     const pageItem = findPageItem(room.notebook, activePage);
     if (!pageItem) return;
     if (content !== pageItem.content) {
+      if (content.length > 10000) {
+        alert("Note too long! Max length is 10000 characters.");
+        return;
+      }
       const success = await updateNotebookPageContent(
         pageItem.id,
         room.id,
@@ -163,6 +167,7 @@ const NotesContent = ({ activePage }) => {
             value={content}
             onKeyDown={(e) => handleKeyDown(e)}
             onChange={(e) => setContent(e.target.value)}
+            maxLength={10000}
             onBlur={handleContentBlur}
           ></textarea>
         )}

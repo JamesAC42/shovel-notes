@@ -1,9 +1,10 @@
 import React from 'react';
+import styles from '../../../styles/room/chat/chatcontent.module.scss';
 
 const ChatContent = () => {
   return (
-    <div>
-      {/* Chat content */}
+    <div className={styles.chatContent}>
+      Coming soon!
     </div>
   );
 };

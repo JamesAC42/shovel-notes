@@ -4,7 +4,11 @@ const updateNotebookPageContent = async (req, res, io) => {
     const { pageId, roomId, content } = req.body;
 
     if (!pageId || !roomId || content === undefined) {
-        return res.status(400).json({ error: 'Missing required fields' });
+        return res.status(400).json({ success:false, error: 'Missing required fields' });
+    }
+
+    if (content.length > 10000) {
+        return res.status(400).json({ success:false, error: 'Content too long' });
     }
 
     try {
