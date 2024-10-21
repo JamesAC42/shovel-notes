@@ -11,7 +11,7 @@ const { Server } = require('socket.io');
 
 const app = express();
 const httpServer = http.createServer(app);
-const PORT = process.env.PORT || 5015;
+const PORT = process.env.PORT || 5016;
 const BACKUP_FILE = path.join(__dirname, 'database', 'flashcards.json');
 const handleConnection = require('./socket');
 
@@ -28,9 +28,14 @@ app.use(
     store: new RedisStore({ client: redis }),
     secret: 'domoarigato',
     resave: false,
+    name: 'shovel-session',
     saveUninitialized: false,
     cookie: {
-      secure: env.secureSession, // Set to true if using HTTPS
+      secure: env.secureSession, 
+      domain: 'ovel.sh',
+      path:'/',
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000
     },
   })
 );
@@ -46,7 +51,7 @@ if(env.local) {
   io = new Server(httpServer, {
   	path:'/socket',
     cors: {
-        origin: 'https://ovel.sh',
+        origin: 'https://notes.ovel.sh',
         methods: ['GET','POST']
     } 
   });
@@ -135,7 +140,7 @@ async function backupToJson() {
 }
 
 // Schedule regular backups every 20 minutes
-setInterval(backupToJson, 1000 * 60 * 20);
+//setInterval(backupToJson, 1000 * 60 * 20);
 
 // Import controllers
 //const { getDecks } = require('./controllers/get/decks/getDecks');

@@ -1,6 +1,6 @@
 CREATE TABLE notebooks
 (
-    id integer NOT NULL DEFAULT nextval('notebooks_id_seq'::regclass),
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     room_id integer NOT NULL,
     CONSTRAINT notebooks_pkey PRIMARY KEY (id),
     CONSTRAINT notebooks_room_id_fkey FOREIGN KEY (room_id)
@@ -11,7 +11,7 @@ CREATE TABLE notebooks
 
 CREATE TABLE notebook_pages
 (
-    id integer NOT NULL DEFAULT nextval('notebook_pages_id_seq'::regclass),
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     notebook_id integer NOT NULL,
     parent_id integer,
     title character varying(100) COLLATE pg_catalog."default" NOT NULL,

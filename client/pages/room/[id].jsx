@@ -8,6 +8,7 @@ import Navigation from '../../components/room/Navigation';
 import { Pages } from '../../constants/Pages';
 import SocketHandler from '../../components/room/SocketHandler';
 import PopupManager from '../../components/PopupManager';
+import Head from 'next/head';
 
 // Import main content components
 import NotesContent from '../../components/room/notes/NotesContent';
@@ -96,6 +97,11 @@ const Room = () => {
 
   return (
     <RoomContext.Provider value={{room, setRoom}}>
+      
+      <Head>
+        <title>shovel - notebook</title>
+        <link rel="icon" href="/favicon.ico" />                
+      </Head>
       <div className={styles.room}>
         <CustomThemePicker />
         <PopupManager />
