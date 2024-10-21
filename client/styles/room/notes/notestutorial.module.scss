@@ -1,0 +1,56 @@
+@import "../../variables.module.scss";
+
+.notesTutorial {
+    
+    padding:0 1.5rem;
+    padding-top:3.8rem;
+    padding-bottom:1.5rem;
+
+    max-height:calc(100vh - 3.8rem - 3rem);
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    position:relative;
+
+    @include slide-fade-in;
+
+    .notesTutorialHeader {
+        font-size:1.4rem;
+        svg {
+            transform: translateY(2px);
+        }
+    }
+
+    .notesTutorialContent {
+        margin-top:1rem;
+        p {
+            font-size:1.1rem;
+            a {
+                color:var(--link-color);
+                margin-right:0.5rem;
+            }
+        }
+    }
+
+    .notesTutorialScreenshots {
+        margin-top:3rem;
+        @include flex-center-col;
+        .screenshotOuter {
+            @include flex-center-col;
+            img {
+                max-width:90%;
+                border-radius:1rem;
+                border:1px solid var(--primary-color);
+            }
+            p {
+                text-align:center;
+                font-size:1.1rem;
+                max-width:50%;
+                margin-bottom:3rem;
+                a {
+                    color:var(--link-color);
+                }
+            }
+        }
+    }
+}

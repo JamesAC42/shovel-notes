@@ -6,6 +6,7 @@ import renameNotebookPage from "../../../utilities/renameNotebookPage";
 import updateNotebookPageContent from "../../../utilities/updateNotebookPageContent";
 
 import { PiSwap } from "react-icons/pi";
+import NotesTutorial from "./NotesTutorial";
 
 const NotesContent = ({ activePage }) => {
   const { room } = useContext(RoomContext);
@@ -117,7 +118,7 @@ const NotesContent = ({ activePage }) => {
   };
 
   if (!activePage) {
-    return null;
+    return <NotesTutorial />
   }
 
   return (
