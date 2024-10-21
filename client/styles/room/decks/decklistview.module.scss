@@ -209,6 +209,7 @@
     width:100%;
     position:relative;
     height:50dvh;
+    @include zoom-in-appear;
     .noActiveDeckMessage {
         @include flex-center;
         gap: 1rem;

@@ -51,6 +51,7 @@ const DecksNavigation = () => {
   const {room} = useContext(RoomContext);
 
   const decks = room?.decks ?? [];
+  decks.sort((a, b) => new Date(b.last_studied_at) - new Date(a.last_studied_at));
 
   const showNewDeckPopup = () => {
     setView((prevView) => {
