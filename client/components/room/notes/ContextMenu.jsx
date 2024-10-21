@@ -6,7 +6,7 @@ import { useContext, useState, useEffect } from 'react';
 import RoomContext from '../../../contexts/RoomContext';
 import renameNotebookPage from '../../../utilities/renameNotebookPage';
 
-const ContextMenu = ({ position, mode, parent, onClose }) => {
+const ContextMenu = ({ position, mode, parent, onClose, disableCreate }) => {
 
     const [isLastPage, setIsLastPage] = useState(false);
     const { room } = useContext(RoomContext);
@@ -74,12 +74,16 @@ const ContextMenu = ({ position, mode, parent, onClose }) => {
         }
     }, [room, parent]);
 
+    if(mode === ContextMenuMode.ROOT && disableCreate) {
+        return null;
+    }
+
     return (
         <div
             className={styles.contextMenu}
             style={{top: position.y, left: position.x}}>
             {
-                mode === ContextMenuMode.ROOT || mode === ContextMenuMode.FOLDER ?
+                (mode === ContextMenuMode.ROOT || mode === ContextMenuMode.FOLDER) && !disableCreate ?
                 (
                     <>
                     <div className={styles.contextMenuItem} onClick={handleNewFolder}>

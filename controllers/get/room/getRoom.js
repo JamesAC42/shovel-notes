@@ -4,7 +4,9 @@ const getUsersInRoom = require('../../../utilities/getUsersInRoom');
 const getNotebook = require('../../../utilities/getNotebook');  
 const { createNotebook } = require('../../../utilities/createNotebook');
 const getDecksInRoom = require('../../../utilities/getDecksInRoom');
-async function getRoom(req, res) {
+const { getFreeDeckGenerations, getDeckGenerations } = require('../../../utilities/account-meters/deckLimits');
+
+async function getRoom(req, res, redis) {
 
     let roomId = req.query.id;
     if (!roomId) {
@@ -80,7 +82,7 @@ async function getRoom(req, res) {
     }
 
     const roomInfo = await getRoomInfo(roomId);
-    let notebook = await getNotebook(roomId, true);
+    let notebook = await getNotebook(roomId);
 
     if(notebook.length === 0) {
         const newNotebook = await createNotebook(roomId);
@@ -89,13 +91,20 @@ async function getRoom(req, res) {
 
     let decks = await getDecksInRoom(roomId);
 
+    let freeDeckGenerations = await getFreeDeckGenerations(redis, user.id);
+    let deckGenerations = await getDeckGenerations(redis, user.id);
+
     const room = {
         id: roomId,
         name: roomInfo.name,
         public: roomInfo.public,
         users: usersInRoom,
         notebook: notebook,
-        decks: decks
+        decks: decks,
+        limits: {
+            freeDeckGenerations: freeDeckGenerations,
+            deckGenerations: deckGenerations
+        }
     }
 
     const response = {

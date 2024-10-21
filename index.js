@@ -178,7 +178,7 @@ app.put('/notebook/renamePage', (req, res) => renameNotebookPage(req, res, io));
 app.put('/notebook/updatePageContent', (req, res) => updateNotebookPageContent(req, res, io));
 
 app.get('/user', getUser);
-app.get('/room', getRoom);
+app.get('/room', (req, res) => getRoom(req, res, redis));
 
 app.get('/notebook/folder/:id', getFolderContent);
 app.get('/notebook/page/:id', getPageContent);
@@ -186,7 +186,7 @@ app.get('/notebook/allPages/:roomId', getAllPages);
 
 app.get('/decks/get', getAllDecksInRoom);
 app.post('/decks/create', (req, res) => createDeck(req, res, io));
-app.post('/decks/createFromNotes', (req, res) => createDeckFromNotes(req, res, io));
+app.post('/decks/createFromNotes', (req, res) => createDeckFromNotes(req, res, io, redis));
 app.post('/decks/delete', (req, res) => deleteDeck(req, res, io));
 app.post('/decks/rename', (req, res) => renameDeck(req, res, io));
 app.post('/decks/updateLastStudied', (req, res) => updateLastStudied(req, res, io));

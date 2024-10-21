@@ -88,6 +88,48 @@
                     }
                 }
             }
+
+            .generateDeckDisabled {
+                position:absolute;
+                top:0;left:0;
+                height:100%;
+                width:100%;
+                @include flex-center;
+                .generateDeckDisabledBackground {
+                    position:absolute;
+                    top:0;left:0;
+                    height:100%;
+                    width:100%;
+                    background:var(--background-dark);
+                    opacity:0.5;
+                }
+                .generateDeckDisabledMessage {
+                    z-index:1001;
+                    width:90%;
+                    margin:0 1rem;
+                    border-radius: 0.5rem;
+                    box-shadow:0 0 1rem 0.8rem var(--background-dark);
+                    padding:1rem 3rem;
+                    @include flex-center;
+                    border:2px solid var(--secondary-color);
+                    background:var(--background-color);
+                    a {
+                        color:var(--link-color);
+                        margin:0 0.5rem;
+                    }
+                }
+            }
+
+            .freeDeckGenerations,
+            .premiumDeckGenerations {
+                margin-top:0.5rem;
+                padding:0.2rem 0.5rem;
+                text-align:center;
+                a {
+                    color:var(--link-color);
+                    margin:0 0.5rem;
+                }
+            }
         }
     }
 

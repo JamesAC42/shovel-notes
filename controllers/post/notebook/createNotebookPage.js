@@ -51,6 +51,19 @@ async function createNotebookPage(req, res, io) {
             }
         }
 
+        // Check if user is free tier and has reached the page limit
+        if (user.tier === 1) {
+            const pageCount = await NotebookPage.count({
+                where: { notebook_id: notebook.id, is_folder: false }
+            });
+            if (pageCount >= 25) {
+                return res.status(403).json({ 
+                    success: false, 
+                    message: 'Free tier users are limited to 25 notebook pages. Upgrade to create more pages.' 
+                });
+            }
+        }
+
         // Get the highest order number for siblings
         const highestOrder = await NotebookPage.max('order', {
             where: { 

@@ -1,9 +1,10 @@
 const generateFlashcards = require('../../llm/generateFlashcards');
 const { Deck, Notebook, NotebookPage } = require('../../models');
+const { getDeckGenerations, incrementDeckGenerations, incrementFreeDeckGenerations, getFreeDeckGenerations } = require('../../utilities/account-meters/deckLimits');
 const createManyFlashcards = require('../../utilities/createManyFlashcards');
 const getSession = require('../../utilities/getSession');
 
-async function createDeckFromNotes(req, res, io) {
+async function createDeckFromNotes(req, res, io, redis) {
   try {
     const user = await getSession(req);
     if (!user) {
@@ -16,6 +17,18 @@ async function createDeckFromNotes(req, res, io) {
     }
     if (!Array.isArray(notes) || !notes.every(Number.isInteger)) {
       return res.status(400).json({ success: false, message: 'Notes must be an array of integers' });
+    }
+
+    if(user.tier === 1) {
+        let freeDeckGenerations = await getFreeDeckGenerations(redis, user.id);
+        if(freeDeckGenerations >= 5) {
+            return res.status(403).json({ success: false, message: 'You have reached the maximum number of free AI decks. Upgrade to create unlimited AIdecks.' });
+        }
+    } else {
+        let deckGenerations = await getDeckGenerations(redis, user.id);
+        if(deckGenerations >= 5) {
+          return res.status(403).json({ success: false, message: 'You have reached the maximum number of decks for your tier. Upgrade to create more decks.' });
+        }
     }
 
     const notebook = await Notebook.findOne({ where: { room_id: roomId } });    
@@ -57,6 +70,12 @@ async function createDeckFromNotes(req, res, io) {
     let flashcardData = await generateFlashcards(noteContents);
     let flashcards = await createManyFlashcards(deck.id, flashcardData);
 
+    if(user.tier === 1) {
+      await incrementFreeDeckGenerations(redis, user.id);
+    } else {
+      await incrementDeckGenerations(redis, user.id);
+    }
+
     const newFlashcards = flashcards.map(flashcard => ({
       id: flashcard.id,
       front: flashcard.front,
@@ -79,7 +98,7 @@ async function createDeckFromNotes(req, res, io) {
     };
 
     // Emit socket event
-    io.to(`room_${roomId}`).emit('deckCreated', { deck: newDeck });
+    io.to(`room_${roomId}`).emit('deckCreated', { deck: newDeck, generated:true, free: user.tier === 1 });
 
     res.status(201).json({ success: true, deck: newDeck });
   } catch (error) {

@@ -81,4 +81,13 @@
             }
         }
     }
+
+    .maxPagesReached {
+        font-size:0.8rem;
+        margin-top:1rem;
+        text-align:center;
+        a {
+            color:var(--link-color);
+        }
+    }
 }

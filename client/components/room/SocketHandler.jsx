@@ -137,6 +137,14 @@ const SocketHandler = ({roomId}) => {
                     flashcards: data.deck.flashcards ? data.deck.flashcards : []
                 });
 
+                if(data.generated) {
+                    if(data.free) {
+                        newRoom.limits.freeDeckGenerations++;
+                    } else {
+                        newRoom.limits.deckGenerations++;
+                    }
+                }
+
                 return newRoom;
             });
         });
@@ -149,7 +157,6 @@ const SocketHandler = ({roomId}) => {
                     newActiveDeck = newRoom.decks[1].id;
                 }
 
-                console.log("new active deck",newActiveDeck);
                 newRoom.decks = newRoom.decks.filter(deck => deck.id !== data.deckId);
                 
                 setView((prevView) => ({
@@ -164,7 +171,6 @@ const SocketHandler = ({roomId}) => {
         newSocket.on('deckRenamed', (data) => {
             setRoom(prevRoom => {
                 let newRoom = JSON.parse(JSON.stringify(prevRoom));
-                console.log(newRoom);
                 let i = newRoom.decks.findIndex(deck => deck.id === data.deck.id);
                 if(i !== -1) {
                     newRoom.decks[i].title = data.deck.title;

@@ -8,11 +8,13 @@ import RoomContext from "../../../contexts/RoomContext";
 import axios from "axios";
 import ViewContext from "../../../contexts/ViewContext";
 import Loading from "../../Loading";
+import UserContext from "../../../contexts/UserContext";
 
 const NewDeckPopup = () => {
 
     const { room } = useContext(RoomContext);
     const {view, setView} = useContext(ViewContext);
+    const {userInfo} = useContext(UserContext);
 
     const [pagesFetched, setPagesFetched] = useState(false);
     const [notes, setNotes] = useState([]);
@@ -114,6 +116,30 @@ const NewDeckPopup = () => {
         ));
     }
 
+    const shouldDisableGenerateDeck = () => {
+        if(userInfo.tier === 1) {
+            return room.limits.freeDeckGenerations >= 5;
+        }
+        return room.limits.deckGenerations >= 5;
+    }
+
+    const generateDeckDisabledMessage = () => {
+        if(userInfo.tier === 1) {
+            return (
+                <p>
+                    You've reached your limit of 5 free deck generations. 
+                    <a href="https://ovel.sh/premium">Upgrade to Premium</a> 
+                    to generate unlimited decks.
+                </p>
+            );
+        }
+        return (
+            <p>
+                Premium users can generate up to 5 decks per day.
+            </p>
+        );
+    }
+
     return (
         <div className={styles.newDeckPopup}>
 
@@ -150,8 +176,31 @@ const NewDeckPopup = () => {
                     <ActionButton 
                         onClick={generateDeckFromNotes}
                         text="Generate Deck" 
-                        disabled={generating}
+                        disabled={generating || shouldDisableGenerateDeck() || selectedNotes.length === 0}
                         icon={<TbPencilPlus />} />
+                    {
+                        shouldDisableGenerateDeck() ?
+                        <div className={styles.generateDeckDisabled}>
+                            <div className={styles.generateDeckDisabledBackground}/>
+                            <div className={styles.generateDeckDisabledMessage}>
+                                {generateDeckDisabledMessage()}
+                            </div>
+                        </div> : null
+                    }
+                    {
+                        userInfo.tier === 1 ?
+                        <div className={styles.freeDeckGenerations}>
+                            {5 - room.limits.freeDeckGenerations} free generation{room.limits.freeDeckGenerations === 4 ? "" : "s"} remaining.
+                            <a href="https://ovel.sh/premium">Upgrade to Premium</a> 
+                            to generate unlimited decks.
+                        </div> : null
+                    }
+                    {
+                        userInfo.tier === 2 ?
+                        <div className={styles.premiumDeckGenerations}>
+                            {5 - room.limits.deckGenerations} generation{room.limits.deckGenerations === 4 ? "" : "s"} remaining today.
+                        </div> : null
+                    }
                 </div>
             </div>
 
