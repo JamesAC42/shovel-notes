@@ -1,0 +1,314 @@
+@import "../../variables.module.scss";
+
+.addQuestionPrompt {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid var(--background-dark);
+    border-radius: 0.5rem;
+    animation: slideDown 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.typeSelector {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: var(--background-dark);
+    border-radius: 0.5rem;
+    
+    .typeOption {
+        flex: 1;
+        padding: 0.5rem;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 0.3rem;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        
+        &:hover {
+            background: var(--background-light);
+        }
+        
+        &.active {
+            background: var(--primary-color);
+            color: var(--background-dark);
+        }
+    }
+}
+
+.questionSection, .answerSection {
+    .columnTitle {
+        margin-bottom: 1rem;
+        font-weight: medium;
+        text-align: center;
+    }
+
+    textarea {
+        width: calc(100% - 1.7rem);
+        min-height: 100px;
+        padding: 0.8rem;
+        border: 1px solid var(--background-dark);
+        border-radius: 0.5rem;
+        background: var(--background-dark);
+        color: var(--text-primary);
+        resize: vertical;
+
+        @include cardTextArea;
+        @include zoom-in-appear;
+
+        transition: all 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+        border-radius: 0.5rem;
+        height: 0.5rem;
+    }
+}
+
+.multipleChoiceOptions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    .multipleChoiceOption {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        input[type="text"] {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid var(--background-dark);
+            border-radius: 0.5rem;
+            background: var(--background-dark);
+            color: var(--text-primary);
+        
+            font-family: 'GeistMono', monospace;
+            @include zoom-in-appear;
+
+            &:focus {
+                outline: none;
+                border-color: var(--primary-color);
+            }
+        }
+
+        .checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            @include zoom-in-appear;
+
+
+            input[type="checkbox"] {
+                width: 1.2rem;
+                height: 1.2rem;
+            }
+        }
+    }
+}
+
+.trueFalseToggle {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: var(--background-dark);
+    border-radius: 0.5rem;
+    justify-content: center;
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 222px;
+        height: 38px;
+
+        border:1px solid var(--secondary-color);
+        border-radius: 0.5rem;
+
+        input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+
+            &:checked + .slider {
+                .trueOption {
+                    color: var(--background-dark);
+                }
+                
+                .falseOption {
+                    color: var(--text-secondary);
+                }
+                
+                &:before {
+                    transform: translateX(0);
+                }
+            }
+
+            &:not(:checked) + .slider {
+                .trueOption {
+                    color: var(--text-secondary);
+                }
+                
+                .falseOption {
+                    color: var(--background-dark);
+                }
+
+                &:before {
+                    transform: translateX(107px);
+                }
+            }
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--background-light);
+            transition: .2s;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+            font-family: 'GeistMono', monospace;
+
+            .trueOption, .falseOption {
+                z-index: 1;
+                transition: all 0.2s;
+                padding: 0.3rem 1.2rem;
+                flex: 1;
+                text-align: center;
+            }
+
+            &:before {
+                position: absolute;
+                content: "";
+                height: calc(100% - 4px);
+                width: 50%;
+                left: 2px;
+                bottom: 2px;
+                background-color: white;
+                transition: .2s;
+                border-radius: 0.3rem;
+            }
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+
+    .actionButton {
+        cursor: pointer;
+        padding: 0.6rem;
+        border-radius: 0.5rem;
+        background: var(--background-dark);
+        height:1rem;
+        width:1rem;
+
+        svg {
+            transform: scale(1.2);
+        }
+
+        &.clearButton {
+            color: var(--error-color);
+        }
+
+        &:hover {
+            outline: 2px solid var(--secondary-color);
+        }
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 
+
+.error {
+    background-color: var(--error-color);
+    color: var(--background-dark);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.multipleChoiceOption {
+    input[type="text"].required {
+        border-color: #666;
+        
+        &::placeholder {
+            color: #666;
+        }
+    }
+}
+
+.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+} 
+
+.editMode {
+
+    padding:0;
+    width:100%;
+    border:none;
+    
+    .actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        
+        .actionButton {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            
+            &.cancelButton {
+                background-color: #f0f0f0;
+                
+                &:hover {
+                    background-color: #e0e0e0;
+                }
+            }
+            
+            &.saveButton {
+                background-color: #007bff;
+                color: white;
+                
+                &:hover {
+                    background-color: #0056b3;
+                }
+                
+                &.loading {
+                    opacity: 0.7;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+} 
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+} 

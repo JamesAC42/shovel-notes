@@ -117,7 +117,8 @@ const NewDeckPopup = () => {
     }
 
     const shouldDisableGenerateDeck = () => {
-        if(userInfo.tier === 1) {
+        if (!room.limits) return false;
+        if (userInfo.tier === 1) {
             return room.limits.freeDeckGenerations >= 5;
         }
         return room.limits.deckGenerations >= 5;
@@ -188,17 +189,17 @@ const NewDeckPopup = () => {
                         </div> : null
                     }
                     {
-                        userInfo.tier === 1 ?
+                        userInfo.tier === 1 && room.limits ?
                         <div className={styles.freeDeckGenerations}>
-                            {5 - room.limits.freeDeckGenerations} free generation{room.limits.freeDeckGenerations === 4 ? "" : "s"} remaining.
+                            {5 - (room.limits.freeDeckGenerations || 0)} free generation{(room.limits.freeDeckGenerations || 0) === 4 ? "" : "s"} remaining.
                             <a href="https://ovel.sh/premium">Upgrade to Premium</a> 
                             to generate unlimited decks.
                         </div> : null
                     }
                     {
-                        userInfo.tier === 2 ?
+                        userInfo.tier === 2 && room.limits ?
                         <div className={styles.premiumDeckGenerations}>
-                            {5 - room.limits.deckGenerations} generation{room.limits.deckGenerations === 4 ? "" : "s"} remaining today.
+                            {5 - (room.limits.deckGenerations || 0)} generation{(room.limits.deckGenerations || 0) === 4 ? "" : "s"} remaining today.
                         </div> : null
                     }
                 </div>

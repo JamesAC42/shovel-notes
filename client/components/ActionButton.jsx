@@ -1,6 +1,6 @@
 import styles from '../styles/actionbutton.module.scss';
 
-const ActionButton = ({text, icon, onClick, disabled}) => {
+const ActionButton = ({text, icon, onClick, disabled, highlighted}) => {
 
     const handleClick = () => {
         if (!disabled) {
@@ -8,10 +8,15 @@ const ActionButton = ({text, icon, onClick, disabled}) => {
         }
     }
 
+    let buttonClass = styles.actionButton;
+    if(highlighted) {
+        buttonClass += ' ' + styles.highlightedActionButton;
+    }
+
     return (
         <div
             onClick={() => handleClick()}
-            className={`${styles.actionButton} ${disabled ? styles.disabled : ''}`}>
+            className={`${buttonClass} ${disabled ? styles.disabled : ''}`}>
             <span>
                 {text}
                 {icon}

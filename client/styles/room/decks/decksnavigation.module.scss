@@ -8,10 +8,10 @@
     .navigationSectionContentInner {
         @include navigation-section-content-inner;
 
-        width:75%;
+        width:70%;
         max-width: 75%;
 
-        margin-left:2rem;
+        margin-left:1rem;
 
         .decksFilter {
             display: flex;
@@ -19,16 +19,6 @@
             align-items: center;
             justify-content: flex-start;
             gap:0.5rem;
-        }
-
-        .addDeckHelp {
-            position:absolute;
-            top:20rem;
-            right:0;
-            transform:translate(100%,0);
-            font-size:0.8rem;
-            color:var(--secondary-color);
-            z-index:10000;
         }
 
         .decksList {

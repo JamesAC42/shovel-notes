@@ -238,6 +238,111 @@ const SocketHandler = ({roomId}) => {
             });
         });
 
+        newSocket.on('quizCreated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                if (!newRoom.quizzes) {
+                    newRoom.quizzes = [];
+                }
+                newRoom.quizzes.push(data.quiz);
+                return newRoom;
+            });
+        });
+
+        newSocket.on('quizDeleted', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                if (!newRoom.quizzes) {
+                    newRoom.quizzes = [];
+                    return newRoom;
+                }
+                newRoom.quizzes = newRoom.quizzes.filter(quiz => quiz.id !== data.quizId);
+                return newRoom;
+            });
+        });
+
+        newSocket.on('quizUpdated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                if (!newRoom.quizzes) {
+                    newRoom.quizzes = [];
+                    return newRoom;
+                }
+                let i = newRoom.quizzes.findIndex(quiz => quiz.id === data.quiz.id);
+                if(i !== -1) {
+                    newRoom.quizzes[i] = {
+                        ...data.quiz,
+                        last_edited_by: data.last_edited_by_username
+                    };
+                }
+                return newRoom;
+            });
+        });
+
+        newSocket.on('quizQuestionCreated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let quizIndex = newRoom.quizzes.findIndex(quiz => quiz.id === data.quizId);
+                
+                if (quizIndex !== -1) {
+                    if (!newRoom.quizzes[quizIndex].questions) {
+                        newRoom.quizzes[quizIndex].questions = [];
+                    }
+                    newRoom.quizzes[quizIndex].questions.push(data.question);
+                    newRoom.quizzes[quizIndex].last_edited_at = data.last_edited_at;
+                    newRoom.quizzes[quizIndex].last_edited_by = data.last_edited_by_username;
+                }
+                
+                return newRoom;
+            });
+        });
+
+        newSocket.on('quizQuestionUpdated', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let quizIndex = newRoom.quizzes.findIndex(quiz => quiz.id === data.quizId);
+                
+                if (quizIndex !== -1 && newRoom.quizzes[quizIndex].questions) {
+                    let questionIndex = newRoom.quizzes[quizIndex].questions.findIndex(
+                        q => q.id === data.question.id
+                    );
+                    if (questionIndex !== -1) {
+                        newRoom.quizzes[quizIndex].questions[questionIndex] = data.question;
+                        newRoom.quizzes[quizIndex].last_edited_at = data.last_edited_at;
+                        newRoom.quizzes[quizIndex].last_edited_by = data.last_edited_by_username;
+                    }
+                }
+                
+                return newRoom;
+            });
+        });
+
+        newSocket.on('quizQuestionDeleted', (data) => {
+            console.log('Received quizQuestionDeleted event:', data);
+            setRoom(prevRoom => {
+                console.log('Previous room state:', prevRoom);
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let quizIndex = newRoom.quizzes.findIndex(quiz => quiz.id === data.quizId);
+                
+                if (quizIndex !== -1) {
+
+                    console.log(newRoom.quizzes[quizIndex].questions);
+                    if (!newRoom.quizzes[quizIndex].questions) {
+                        newRoom.quizzes[quizIndex].questions = [];
+                    }
+                    
+                    newRoom.quizzes[quizIndex].questions = newRoom.quizzes[quizIndex].questions.filter(
+                        q => q.id !== data.questionId
+                    );
+                    
+                    newRoom.quizzes[quizIndex].last_edited_at = data.last_edited_at;
+                    newRoom.quizzes[quizIndex].last_edited_by = data.last_edited_by_username;
+                }
+                
+                return newRoom;
+            });
+        });
+
     }, [roomId, setView]);
 
     return null;

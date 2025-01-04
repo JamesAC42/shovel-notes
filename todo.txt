@@ -1,5 +1,4 @@
 - add popup for new notes feature in rooms
-- update premium page to reflect new features and access to discord
 - add link to notebook in room
 - send email about new notes
 - make a feedback survey for notes and decks
@@ -17,3 +16,4 @@ DONE
 - add "coming soon" to other pages
 - add something to the settings page
 - add info for how many generations left user has
+- update premium page to reflect new features

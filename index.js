@@ -176,6 +176,15 @@ const { deleteFlashcard } = require('./controllers/flashcards/deleteFlashcard');
 const { updateFlashcard } = require('./controllers/flashcards/updateFlashcard');
 const { getAllFlashcardsInDeck } = require('./controllers/flashcards/getAllFlashcardsInDeck');
 
+const { createQuiz } = require('./controllers/quizzes/createQuiz');
+const { getAllQuizzesInRoom } = require('./controllers/quizzes/getAllQuizzesInRoom');
+const { getQuizQuestions } = require('./controllers/quizzes/getQuizQuestions');
+const { createQuizQuestion } = require('./controllers/quizzes/createQuizQuestion');
+const { updateQuiz } = require('./controllers/quizzes/updateQuiz');
+const { deleteQuiz } = require('./controllers/quizzes/deleteQuiz');
+const { createQuizFromNotes } = require('./controllers/quizzes/createQuizFromNotes');
+const { deleteQuizQuestion } = require('./controllers/quizzes/deleteQuizQuestion');
+
 // Routes
 app.post('/notebook/page', (req, res) => createNotebookPage(req, res, io));
 app.delete('/notebook/page', (req, res) => deleteNotebookPage(req, res, io));
@@ -200,6 +209,15 @@ app.get('/decks/getFlashcardsInDeck', getAllFlashcardsInDeck);
 app.post('/decks/addFlashcard', (req, res) => createFlashcardController(req, res, io));
 app.post('/decks/deleteFlashcard', (req, res) => deleteFlashcard(req, res, io));
 app.post('/decks/updateFlashcard', (req, res) => updateFlashcard(req, res, io));
+
+app.get('/quizzes/get', getAllQuizzesInRoom);
+app.get('/quizzes/questions/:quizId', getQuizQuestions);
+app.post('/quizzes/create', (req, res) => createQuiz(req, res, io));
+app.post('/quizzes/questions/create', (req, res) => createQuizQuestion(req, res, io));
+app.put('/quizzes/update', (req, res) => updateQuiz(req, res, io));
+app.post('/quizzes/delete', (req, res) => deleteQuiz(req, res, io));
+app.post('/quizzes/createFromNotes', (req, res) => createQuizFromNotes(req, res, io, redis));
+app.delete('/quizzes/question/delete', (req, res) => deleteQuizQuestion(req, res, io));
 
 io.on('connection', handleConnection);
 

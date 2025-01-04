@@ -165,6 +165,7 @@ RoomUser.belongsTo(User, { foreignKey: "userId" });
 Room.hasMany(RoomUser, { foreignKey: 'room' });
 RoomUser.belongsTo(Room, { foreignKey: 'room' });
 
+Room.hasOne(Notebook, { foreignKey: 'room_id' });
 Notebook.belongsTo(Room, { foreignKey: 'room_id' });
 
 // Deck model
@@ -256,6 +257,239 @@ User.hasMany(Deck, { as: 'editedDecks', foreignKey: 'last_edited_by' });
 Flashcard.belongsTo(Deck, { foreignKey: 'deck' });
 Deck.hasMany(Flashcard, { foreignKey: 'deck' });
 
+// Quiz model
+const Quiz = sequelize.define('Quiz', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    room: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    title: {
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    created_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    last_edited_by: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    notebook: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    last_edited_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    last_studied_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+    }
+}, {
+    tableName: 'quizzes',
+    timestamps: false
+});
+
+// QuizQuestion model
+const QuizQuestion = sequelize.define('QuizQuestion', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        autoIncrementIdentity: true
+    },
+    quiz_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    question_type: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    prompt: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    question_order: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    tableName: 'quiz_questions',
+    timestamps: false
+});
+
+// QuizAnswer model
+const QuizAnswer = sequelize.define('QuizAnswer', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        autoIncrementIdentity: true
+    },
+    question_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'question_id'
+    },
+    answer_value: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        field: 'answer_value'
+    },
+    is_correct: {
+        type: DataTypes.BOOLEAN,
+        field: 'is_correct',
+        defaultValue: false
+    }
+}, {
+    tableName: 'quiz_answers',
+    timestamps: false
+});
+
+// Define associations for Quiz models
+Quiz.belongsTo(Room, { foreignKey: 'room' });
+Room.hasMany(Quiz, { foreignKey: 'room' });
+
+Quiz.belongsTo(Notebook, { foreignKey: 'notebook' });
+Notebook.hasMany(Quiz, { foreignKey: 'notebook' });
+
+Quiz.belongsTo(User, { as: 'lastEditedByUser', foreignKey: 'last_edited_by' });
+User.hasMany(Quiz, { as: 'editedQuizzes', foreignKey: 'last_edited_by' });
+
+Quiz.hasMany(QuizQuestion, { foreignKey: 'quiz_id' });
+QuizQuestion.belongsTo(Quiz, { foreignKey: 'quiz_id' });
+
+QuizQuestion.hasMany(QuizAnswer, { foreignKey: 'question_id' });
+QuizAnswer.belongsTo(QuizQuestion, { foreignKey: 'question_id' });
+
+// QuizAttempt model
+const QuizAttempt = sequelize.define('QuizAttempt', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    quiz_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    started_at: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    completed_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    overall_score: {
+        type: DataTypes.DECIMAL(5,2),
+        allowNull: true
+    },
+    overall_feedback: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    total_questions: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    tableName: 'quiz_attempts',
+    timestamps: false
+});
+
+// QuizAttemptQuestion model
+const QuizAttemptQuestion = sequelize.define('QuizAttemptQuestion', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    attempt_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    original_question_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    question_type: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    prompt: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    question_order: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    tableName: 'quiz_attempt_questions',
+    timestamps: false
+});
+
+// QuizAttemptAnswer model
+const QuizAttemptAnswer = sequelize.define('QuizAttemptAnswer', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    attempt_question_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    answer_value: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    is_correct: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    ai_feedback: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
+    points_awarded: {
+        type: DataTypes.DECIMAL(5,2),
+        allowNull: true
+    }
+}, {
+    tableName: 'quiz_attempt_answers',
+    timestamps: false
+});
+
+// Define associations for quiz attempt models
+QuizAttempt.belongsTo(Quiz, { foreignKey: 'quiz_id' });
+Quiz.hasMany(QuizAttempt, { foreignKey: 'quiz_id' });
+
+QuizAttempt.belongsTo(User, { foreignKey: 'user_id' });
+User.hasMany(QuizAttempt, { foreignKey: 'user_id' });
+
+QuizAttempt.hasMany(QuizAttemptQuestion, { foreignKey: 'attempt_id' });
+QuizAttemptQuestion.belongsTo(QuizAttempt, { foreignKey: 'attempt_id' });
+
+QuizAttemptQuestion.belongsTo(QuizQuestion, { foreignKey: 'original_question_id' });
+QuizQuestion.hasMany(QuizAttemptQuestion, { foreignKey: 'original_question_id' });
+
+QuizAttemptQuestion.hasMany(QuizAttemptAnswer, { foreignKey: 'attempt_question_id' });
+QuizAttemptAnswer.belongsTo(QuizAttemptQuestion, { foreignKey: 'attempt_question_id' });
+
 // Export models
 module.exports = {
     Notebook,
@@ -264,5 +498,11 @@ module.exports = {
     Room,
     RoomUser,
     Deck,
-    Flashcard
+    Flashcard,
+    Quiz,
+    QuizQuestion,
+    QuizAnswer,
+    QuizAttempt,
+    QuizAttemptQuestion,
+    QuizAttemptAnswer
 };

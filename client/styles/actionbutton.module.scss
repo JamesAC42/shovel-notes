@@ -59,4 +59,8 @@
             outline:none;
         }
     }
+
+    &.highlightedActionButton {
+        filter:brightness(1.5);
+    }
 }

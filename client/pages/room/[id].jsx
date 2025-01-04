@@ -22,6 +22,7 @@ import ChatContent from '../../components/room/chat/ChatContent';
 import UserContext from '../../contexts/UserContext';
 import RoomContext from '../../contexts/RoomContext';
 import ViewContext from '../../contexts/ViewContext';
+import QuizzesNavigation from '../../components/room/quizzes/QuizzesNavigation';
 
 const Room = () => {
   const router = useRouter();
@@ -48,6 +49,15 @@ const Room = () => {
           return newView;
         })
       }
+    } else if(section === Pages.QUIZZES) {
+      if(room.quizzes.length > 0) {
+        let activeQuiz = room.quizzes[0];
+        setView((prevView) => {
+          let newView = JSON.parse(JSON.stringify(prevView));
+          newView.activeQuiz = activeQuiz.id;
+          return newView;
+        })
+      }
     }
   }
 
@@ -57,14 +67,14 @@ const Room = () => {
         const response = await axios.get(`/api/room?id=${id}&getUser=true`);
         if(!response.data.success) {
           console.log("Room not found");
-          router.push('https://ovel.sh');
+          router.push('/');
           return;
         } else {
           setUserInfo(response.data.userInfo);
           setRoom(response.data.room);
         }
       } catch (error) {
-        router.push('https://ovel.sh');
+        router.push('/');
         console.error('Error fetching room:', error);
       }
     };
@@ -94,6 +104,15 @@ const Room = () => {
         return <NotesContent />;
     }
   };
+
+  const renderNavigationContent = () => {
+    switch (view.navigation) {
+      case "quizzes":
+        return <QuizzesNavigation />;
+      default:
+        return null;
+    }
+  }
 
   return (
     <RoomContext.Provider value={{room, setRoom}}>

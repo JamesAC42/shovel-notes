@@ -70,10 +70,6 @@ const DecksNavigation = () => {
               text="New Deck" 
               icon={<TbPencilPlus />} />
 
-            <div className={styles.addDeckHelp}>
-              Add a deck to get started.
-            </div>
-
             <div className={styles.decksList}>
               {
                 decks.length === 0 && (

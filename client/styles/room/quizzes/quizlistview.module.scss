@@ -1,0 +1,253 @@
+@import "../../variables.module.scss";
+@import "../decks/decklistview.module.scss";
+@import "../decks/decks.module.scss";
+
+.quizContentInner {
+    width: calc(100%);
+    margin: 0rem;
+
+    position:relative;
+
+    transform:translateY(-1.5rem);
+
+    padding-top:1.5rem;
+    max-height:calc(100dvh - 1.5rem);
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+.quizContentHeader {
+    @include flex-center;
+    position: relative;
+    
+    input {
+        width: 80%;
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 2.2rem;
+        font-weight: bold;
+        padding: 10px 0;
+        font-family: 'GeistMono', monospace;
+        text-align: center;
+        @include zoom-in-appear;
+
+        transition: all 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+        border-radius: 0.5rem;
+
+        &::placeholder {
+            color: var(--secondary-color);
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            outline: 1px solid var(--secondary-color);
+        }
+    }
+
+    .quizContentHeaderActions {
+        position: absolute;
+        top: 0;
+        right: 0;
+        @include zoom-in-appear;
+        
+        .deleteQuiz {
+            cursor: pointer;
+            color: var(--error-color);
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+            filter: saturate(0.8);
+            @include flex-center;
+            align-items: center;
+            margin-top:0.5rem;
+            margin-right:1rem;
+
+            .deleteQuizText {
+                margin-left: 0.5rem;
+                overflow:hidden;
+                max-width:0;
+                transition: max-width 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+                white-space: nowrap;
+            }
+
+            svg {
+                transform: scale(1.4);
+            }
+        }
+    }
+}
+
+.quizInfo {
+    @include flex-center;
+    gap: 1rem;
+    margin-top: 1rem;
+    
+    .quizInfoItem {
+        background: var(--background-dark);
+        @include flex-center-col;
+        padding: 0.4rem 1.2rem;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+        
+        .quizInfoItemTitle {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+    }
+}
+
+.viewAttemptsButton {
+    margin-top: 1rem;
+    @include flex-center;
+    gap:1rem;
+}
+
+.quizAddQuestionOuter {
+    margin-top: 2rem;
+    @include flex-center;
+
+    .quizAddQuestionToggleButton {
+        width: calc(85%);
+        border: 1px solid var(--background-dark);
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        @include flex-center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+        @include zoom-in-appear;
+        
+        &:hover {
+            background-color: var(--background-dark);
+        }
+    }
+
+    .quizAddQuestionInner {
+        width: calc(85%);
+        display: flex;
+        flex-direction: row;
+        padding: 1rem;
+        gap: 1rem;
+        border: 1px solid var(--background-dark);
+        border-radius: 0.5rem;
+
+        .quizAddQuestionColumn {
+            flex-grow: 1;
+            position: relative;
+            animation: slideDown 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+            .quizAddQuestionColumnTitle {
+                margin-bottom: 0.5rem;
+                font-weight: medium;
+                text-align: center;
+            }
+
+            .quizAddQuestionColumnInput {
+                padding: 0 0.25rem;
+                textarea {
+                    @include cardTextArea;
+                }
+            }
+        }
+
+        .quizAddQuestionActions {
+            width: 5rem;
+            @include flex-center-col;
+            gap: 1rem;
+            animation: slideDown 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+            .collapseAddQuestionPopup, .quizAddQuestionBtn, .clearQuestionBtn {
+                cursor: pointer;
+                @include flex-center;
+                background: var(--background-dark);
+                border-radius: 0.5rem;
+                padding: 1rem;
+                
+                svg {
+                    transform: scale(1.2);
+                }
+
+                &:hover {
+                    filter: brightness(1.5);
+                    outline: 2px solid var(--secondary-color);
+                }
+            }
+
+            .collapseAddQuestionPopup {
+                background: none;
+                margin-bottom: 2rem;
+                svg {
+                    transform: scale(1.6);
+                }
+            }
+
+            .clearQuestionBtn {
+                color: var(--error-color);
+            }
+        }
+    }
+}
+
+.quizAddQuestionOuterActive {
+    // Add any specific active state styles here if needed
+}
+
+.quizQuestionsOuter {
+    width: 90%;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.aiGenerateButton {
+    @include flex-center;
+    margin: 2rem 0;
+    margin-bottom:4rem;
+}
+
+.noActiveQuiz {
+    margin-top: 2rem;
+    text-align: center;
+    width:100%;
+    position:relative;
+    height:50dvh;
+    @include zoom-in-appear;
+    .noActiveQuizMessage {
+        @include flex-center;
+        gap: 1rem;
+        position:absolute;
+        top:4.1rem;
+        left:2rem;
+        font-size:1.3rem;
+    }
+}
+
+.loadingQuestions {
+    padding: 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.popIn {
+    animation: popIn 0.2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+}
+
+.noQuestions {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 2rem;
+} 

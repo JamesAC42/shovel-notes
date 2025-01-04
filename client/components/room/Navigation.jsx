@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import styles from '../../styles/room/navigation.module.scss';
 import { Pages } from '../../constants/Pages';
 import { IoMdSettings } from "react-icons/io";
@@ -6,6 +6,8 @@ import { BsBookHalf, BsStack } from "react-icons/bs";
 import { RiTestTubeFill } from "react-icons/ri";
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
 import { FaPersonChalkboard, FaSitemap } from "react-icons/fa6";
+import ViewContext from '../../contexts/ViewContext';
+import RoomContext from '../../contexts/RoomContext';
 
 // Import navigation components
 import SettingsNavigation from './settings/SettingsNavigation';
@@ -47,6 +49,8 @@ const Navigation = ({ activeSection, setActiveSection, setActivePage }) => {
 
   const navigationContentRef = useRef(null);
   const [sliderOffset, setSliderOffset] = useState(0);
+  const { view, setView } = useContext(ViewContext);
+  const { room } = useContext(RoomContext);
 
   const buttons = [
     { icon: <IoMdSettings />, page: Pages.SETTINGS },
