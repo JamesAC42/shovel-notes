@@ -11,9 +11,12 @@ import QuestionItem from "./QuestionItem";
 import RoomContext from "../../../contexts/RoomContext";
 import axios from "axios";
 import AddQuestionPrompt from './AddQuestionPrompt';
+import ViewContext from "../../../contexts/ViewContext";
+import { formatDateTime } from '../../../utils/dateUtils';
 
-const QuizListView = ({ activeQuiz, toggleMode }) => {
+const QuizListView = ({ activeQuiz, toggleMode, onAttemptSelect }) => {
     const { room, setRoom } = useContext(RoomContext);
+    const { setView } = useContext(ViewContext);
     
     const [showAddQuestionPopup, setShowAddQuestionPopup] = useState(false);
     const [showPopIn, setShowPopIn] = useState(false);
@@ -22,6 +25,11 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
     const [question, setQuestion] = useState('');
     const [answer, setAnswer] = useState('');
     const [questions, setQuestions] = useState([]);
+    const [quizStats, setQuizStats] = useState({
+        attemptCount: 0,
+        averageScore: 0,
+        scoresCount: 0
+    });
 
     const toggleAddQuestionPopup = () => {
         setShowAddQuestionPopup(!showAddQuestionPopup);
@@ -84,13 +92,7 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
     }
 
     const getLastStudiedString = () => {
-        let lastStudied = activeQuiz.last_studied_at;
-        if (!lastStudied) {
-            return "Never";
-        }
-        let date = new Date(lastStudied);
-        let options = { timeZoneName: 'short' };
-        return date.toLocaleString(undefined, options);
+        return formatDateTime(activeQuiz.last_studied_at);
     }
 
     const addPopInClass = (className) => {
@@ -108,6 +110,12 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
         return activeQuiz.last_edited_by || '-';
     }
 
+    const formatScore = (score) => {
+        if (quizStats.scoresCount === 0) return 'No attempts';
+        if (score === null || score === undefined) return '0%';
+        return `${Math.round(score)}%`;
+    };
+
     useEffect(() => {
         async function getQuestions(quizId) {
             const response = await axios.get(`/api/quizzes/questions/${quizId}`);
@@ -124,6 +132,13 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
                     };
                     
                     return newRoom;
+                });
+
+                // Set quiz statistics
+                setQuizStats({
+                    attemptCount: response.data.stats.attemptCount,
+                    averageScore: response.data.stats.averageScore,
+                    scoresCount: response.data.stats.scoresCount
                 });
             } else {
                 console.log(response.data.message);
@@ -170,6 +185,20 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
         );
     }
 
+    const showAttemptsPopup = () => {
+        setView(prev => ({
+            ...prev,
+            showQuizAttemptsPopup: true,
+            onAttemptSelect: (attempt) => {
+                onAttemptSelect(attempt);
+                setView(prev => ({
+                    ...prev,
+                    showQuizAttemptsPopup: false
+                }));
+            }
+        }));
+    };
+
     if (!activeQuiz) {
         return (
             <div className={styles.noActiveQuiz}>
@@ -201,7 +230,7 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
             <div className={addPopInClass(styles.quizInfo)}>
                 <div className={styles.quizInfoItem}>
                     <div className={styles.quizInfoItemTitle}>Attempts</div>
-                    <div className={styles.quizInfoItemValue}>0</div>
+                    <div className={styles.quizInfoItemValue}>{quizStats.attemptCount}</div>
                 </div>
                 <div className={styles.quizInfoItem}>
                     <div className={styles.quizInfoItemTitle}>Questions</div>
@@ -213,7 +242,7 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
                 </div>
                 <div className={styles.quizInfoItem}>
                     <div className={styles.quizInfoItemTitle}>Avg. Score</div>
-                    <div className={styles.quizInfoItemValue}>-</div>
+                    <div className={styles.quizInfoItemValue}>{formatScore(quizStats.averageScore)}</div>
                 </div>
                 <div className={styles.quizInfoItem}>
                     <div className={styles.quizInfoItemTitle}>Last Edited By</div>
@@ -225,13 +254,13 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
                 <ActionButton 
                     text="View Past Attempts"
                     icon={<FaHistory />}
-                    onClick={() => {}}
+                    onClick={showAttemptsPopup}
                 />
                 <ActionButton 
                     text="Take Quiz"
                     highlighted={true}
                     icon={<PiLightningFill />}
-                    onClick={() => {}}
+                    onClick={toggleMode}
                 />
             </div>
 
@@ -258,11 +287,15 @@ const QuizListView = ({ activeQuiz, toggleMode }) => {
             </div>
 
             <div className={styles.aiGenerateButton}>
-                <ActionButton 
-                    text="Generate More Questions"
-                    icon={<FaMagic />}
-                    onClick={() => {}}
-                />
+                {
+                    false && (
+                        <ActionButton 
+                            text="Generate More Questions"
+                            icon={<FaMagic />}
+                            onClick={() => {}}
+                        />
+                    )
+                }
             </div>
         </div>
     );

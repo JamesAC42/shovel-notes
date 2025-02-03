@@ -36,16 +36,7 @@ async function createDeckFromNotes(req, res, io, redis) {
       return res.status(404).json({ success: false, message: 'Notebook not found for this room' });
     }
 
-    const deck = await Deck.create({
-      room: roomId,
-      title: "Untitled Deck",
-      created_at: new Date(),
-      last_edited_by: user.id,
-      notebook: notebook.id,
-      last_edited_at: new Date(),
-      last_studied_at: null
-    });
-
+    // Validate notes before creating deck
     const noteData = await NotebookPage.findAll({
       attributes: ['id', 'content'],
       where: {
@@ -55,8 +46,6 @@ async function createDeckFromNotes(req, res, io, redis) {
     });
 
     const validNoteIds = noteData.map(page => page.id);
-    const noteContents = noteData.map(page => page.content);
-
     const invalidNoteIds = notes.filter(noteId => !validNoteIds.includes(noteId));
 
     if (invalidNoteIds.length > 0) {
@@ -67,6 +56,33 @@ async function createDeckFromNotes(req, res, io, redis) {
       });
     }
 
+    const deck = await Deck.create({
+      room: roomId,
+      title: "Untitled Deck",
+      created_at: new Date(),
+      last_edited_by: user.id,
+      notebook: notebook.id,
+      last_edited_at: new Date(),
+      last_studied_at: null
+    });
+
+    const newDeck = {
+      id: deck.id,
+      room: deck.room,
+      title: deck.title,
+      created_at: deck.created_at,
+      last_edited_by: user.username,
+      notebook: deck.notebook,
+      last_edited_at: deck.last_edited_at,
+      last_studied_at: deck.last_studied_at,
+      flashcards: []
+    };
+
+    // Send immediate response
+    res.status(201).json({ success: true, deck: newDeck });
+
+    // Handle flashcard generation asynchronously
+    const noteContents = noteData.map(page => page.content);
     let flashcardData = await generateFlashcards(noteContents);
     let flashcards = await createManyFlashcards(deck.id, flashcardData);
 
@@ -85,25 +101,21 @@ async function createDeckFromNotes(req, res, io, redis) {
       created_at: flashcard.created_at
     }));
 
-    const newDeck = {
-      id: deck.id,
-      room: deck.room,
-      title: deck.title,
-      created_at: deck.created_at,
-      last_edited_by: user.username,
-      notebook: deck.notebook,
-      last_edited_at: deck.last_edited_at,
-      last_studied_at: deck.last_studied_at,
-      flashcards: newFlashcards
-    };
+    // Emit socket event with completed deck
+    io.to(`room_${roomId}`).emit('deckCreated', { 
+      deck: {...newDeck, flashcards: newFlashcards}, 
+      generated: true, 
+      free: user.tier === 1
+    });
 
-    // Emit socket event
-    io.to(`room_${roomId}`).emit('deckCreated', { deck: newDeck, generated:true, free: user.tier === 1 });
-
-    res.status(201).json({ success: true, deck: newDeck });
   } catch (error) {
     console.error('Error in createDeck:', error);
-    res.status(500).json({ success: false, message: 'Internal server error' });
+    // If error occurs after HTTP response, emit error event
+    if (roomId) {
+      io.to(`room_${roomId}`).emit('deckGenerationError', { 
+        message: 'Failed to generate flashcards'
+      });
+    }
   }
 }
 

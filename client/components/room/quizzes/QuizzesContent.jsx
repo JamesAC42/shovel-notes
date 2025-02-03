@@ -1,20 +1,25 @@
 import React, { useState, useContext, useEffect } from 'react';
-import styles from '../../../styles/room/quizzes/quizzescontent.module.scss';
 import QuizListView from './QuizListView';
 import QuizStudyView from './QuizStudyView';
 import ViewContext from '../../../contexts/ViewContext';
 import RoomContext from '../../../contexts/RoomContext';
+import QuizAttemptView from './QuizAttemptView';
 
 const QuizzesContent = () => {
   const [mode, setMode] = useState("list");
   const [previousActiveQuiz, setPreviousActiveQuiz] = useState(null);
+  const [selectedAttempt, setSelectedAttempt] = useState(null);
   const { view } = useContext(ViewContext);
   const { room } = useContext(RoomContext);
 
-  const toggleMode = async (mode) => {
-    setMode(mode);
-    // Add any additional logic needed when switching modes
-  }
+  const toggleMode = (newMode, data = null) => {
+    if (newMode === "attempt" && data) {
+      setSelectedAttempt(data.attemptId);
+      setMode("attempt");
+    } else {
+      setMode(newMode || "list");
+    }
+  };
 
   useEffect(() => {
     if(view.activeQuiz) {
@@ -28,13 +33,31 @@ const QuizzesContent = () => {
   // Get the active quiz directly from room.quizzes based on view.activeQuiz
   const activeQuiz = room.quizzes?.find(quiz => quiz.id === view.activeQuiz) || null;
 
+  const handleAttemptSelect = (attempt) => {
+    setSelectedAttempt(attempt);
+    setMode("attempt");
+  };
+
   return (
     <>
       {
         mode === "list" ? (
-          <QuizListView activeQuiz={activeQuiz} toggleMode={() => toggleMode("study")}/>
+          <QuizListView 
+            activeQuiz={activeQuiz} 
+            toggleMode={() => toggleMode("study")} 
+            onAttemptSelect={handleAttemptSelect}
+          />
+        ) : mode === "study" ? (
+          <QuizStudyView 
+            activeQuiz={activeQuiz} 
+            toggleMode={toggleMode}
+          />
         ) : (
-          <QuizStudyView activeQuiz={activeQuiz} toggleMode={() => toggleMode("list")}/>
+          <QuizAttemptView
+            attempt={selectedAttempt}
+            quiz={activeQuiz}
+            toggleMode={toggleMode}
+          />
         )
       }
     </>

@@ -6,6 +6,7 @@ const getDecksInRoom = require('../../../utilities/getDecksInRoom');
 const getNotebook = require('../../../utilities/getNotebook');  
 const { createNotebook } = require('../../../utilities/createNotebook');
 const { getFreeDeckGenerations, getDeckGenerations } = require('../../../utilities/account-meters/deckLimits');
+const { getFreeQuizGenerations, getQuizGenerations } = require('../../../utilities/account-meters/quizLimits');
 
 async function getRoom(req, res, redis) {
     try {
@@ -41,6 +42,8 @@ async function getRoom(req, res, redis) {
         // Get user limits
         let freeDeckGenerations = await getFreeDeckGenerations(redis, user.id);
         let deckGenerations = await getDeckGenerations(redis, user.id);
+        let freeQuizGenerations = await getFreeQuizGenerations(redis, user.id);
+        let quizGenerations = await getQuizGenerations(redis, user.id);
 
         // Get quizzes
         const quizzes = await Quiz.findAll({
@@ -65,7 +68,9 @@ async function getRoom(req, res, redis) {
             })),
             limits: {
                 freeDeckGenerations: freeDeckGenerations,
-                deckGenerations: deckGenerations
+                deckGenerations: deckGenerations,
+                freeQuizGenerations: freeQuizGenerations,
+                quizGenerations: quizGenerations
             }
         }
 

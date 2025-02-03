@@ -51,14 +51,8 @@ const NewDeckPopup = () => {
         let selectedNotesIds = selectedNotes.map((note) => note.id);
         try {
             const response = await axios.post('/api/decks/createFromNotes', { roomId: room.id, notes: selectedNotesIds });
-            setGenerating(false);
-            if(response.data.success) {
-                closePopup();
-                setView((prevView) => {
-                    let newView = JSON.parse(JSON.stringify(prevView));
-                    newView.activeDeck = response.data.deck.id;
-                    return newView;
-                });
+            if(!response.data.success) {
+                alert(response.data.message);
             }
         } catch(error) {
             alert("Error generating deck. Please try again.");

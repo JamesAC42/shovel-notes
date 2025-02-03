@@ -5,14 +5,12 @@ import { FaCircle, FaRegCircle } from "react-icons/fa";
 import ActionButton from '../../../components/ActionButton';
 import ViewContext from '../../../contexts/ViewContext';
 import RoomContext from '../../../contexts/RoomContext';
+import { formatDateTime } from '../../../utils/dateUtils';
 
 const QuizItem = ({ view, setView, activeQuiz, quiz }) => {
 
     const lastTaken = () => {
-        if (!quiz.last_taken_at) {
-            return "Never";
-        }
-        return new Date(quiz.last_taken_at).toLocaleDateString();
+        return formatDateTime(quiz.last_studied_at);
     }
 
     const setActiveQuiz = () => {
@@ -41,8 +39,25 @@ const QuizzesNavigation = () => {
     const { view, setView } = useContext(ViewContext);
     const { room } = useContext(RoomContext);
 
-    const quizzes = room?.quizzes ?? [];
-    quizzes.sort((a, b) => new Date(b.last_taken_at) - new Date(a.last_taken_at));
+    const sortedQuizzes = React.useMemo(() => {
+        const quizzes = room?.quizzes ?? [];
+        return [...quizzes].sort((a, b) => {
+            if (!a.last_studied_at && !b.last_studied_at) {
+                return a.title.localeCompare(b.title);
+            }
+            if (!a.last_studied_at) return 1;
+            if (!b.last_studied_at) return -1;
+            
+            const dateA = new Date(a.last_studied_at);
+            const dateB = new Date(b.last_studied_at);
+            
+            if (dateA.getTime() !== dateB.getTime()) {
+                return dateB.getTime() - dateA.getTime();
+            }
+            
+            return a.title.localeCompare(b.title);
+        });
+    }, [room?.quizzes]);
 
     const showNewQuizPopup = () => {
         setView((prevView) => {
@@ -63,14 +78,14 @@ const QuizzesNavigation = () => {
 
                 <div className={styles.quizzesList}>
                     {
-                        quizzes.length === 0 && (
+                        sortedQuizzes.length === 0 && (
                             <div className={styles.noQuizzes}>
                                 <p>No quizzes found in this room.</p>
                             </div>
                         )
                     }
                     {
-                        quizzes.map((quiz) => (
+                        sortedQuizzes.map((quiz) => (
                             <QuizItem
                                 view={view}
                                 setView={setView}

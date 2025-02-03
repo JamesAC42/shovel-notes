@@ -290,7 +290,10 @@ const Quiz = sequelize.define('Quiz', {
     },
     last_studied_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            return this.getDataValue('last_studied_at')?.toISOString();
+        }
     }
 }, {
     tableName: 'quizzes',
@@ -387,11 +390,17 @@ const QuizAttempt = sequelize.define('QuizAttempt', {
     },
     started_at: {
         type: DataTypes.DATE,
-        allowNull: false
+        allowNull: false,
+        get() {
+            return this.getDataValue('started_at')?.toISOString();
+        }
     },
     completed_at: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+            return this.getDataValue('completed_at')?.toISOString();
+        }
     },
     overall_score: {
         type: DataTypes.DECIMAL(5,2),
@@ -468,6 +477,11 @@ const QuizAttemptAnswer = sequelize.define('QuizAttemptAnswer', {
     points_awarded: {
         type: DataTypes.DECIMAL(5,2),
         allowNull: true
+    },
+    user_selected: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
     }
 }, {
     tableName: 'quiz_attempt_answers',

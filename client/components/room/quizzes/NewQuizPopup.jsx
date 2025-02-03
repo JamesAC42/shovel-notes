@@ -54,17 +54,15 @@ const NewQuizPopup = () => {
                 roomId: room.id,
                 notes: selectedNotesIds
             });
-            setGenerating(false);
-            if (response.data.success) {
-                closePopup();
-                setView((prevView) => {
-                    let newView = JSON.parse(JSON.stringify(prevView));
-                    newView.activeQuiz = response.data.quiz.id;
-                    return newView;
-                });
+            if (!response.data.success) {
+                alert(response.data.message);
             }
         } catch (error) {
-            alert("Error generating quiz. Please try again.");
+            if (error.response?.status === 403) {
+                alert(error.response.data.message);
+            } else {
+                alert("Error generating quiz. Please try again.");
+            }
             setGenerating(false);
         }
     }

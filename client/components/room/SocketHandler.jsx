@@ -147,6 +147,13 @@ const SocketHandler = ({roomId}) => {
 
                 return newRoom;
             });
+
+            setView((prevView) => {
+                let newView = JSON.parse(JSON.stringify(prevView));
+                newView.activeDeck = data.deck.id;
+                newView.showNewDeckPopup = false;
+                return newView;
+            });
         });
 
         newSocket.on('deckDeleted', (data) => {
@@ -245,7 +252,22 @@ const SocketHandler = ({roomId}) => {
                     newRoom.quizzes = [];
                 }
                 newRoom.quizzes.push(data.quiz);
+                if(data.generated) {
+                    if(data.free) {
+                        newRoom.limits.freeQuizGenerations++;
+                    } else {
+                        newRoom.limits.quizGenerations++;
+                    }
+                }
+
                 return newRoom;
+            });
+
+            setView((prevView) => {
+                let newView = JSON.parse(JSON.stringify(prevView));
+                newView.activeQuiz = data.quiz.id;
+                newView.showNewQuizPopup = false;
+                return newView;
             });
         });
 
@@ -341,6 +363,41 @@ const SocketHandler = ({roomId}) => {
                 
                 return newRoom;
             });
+        });
+
+        newSocket.on('quizAttemptSubmitted', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                let quizIndex = newRoom.quizzes.findIndex(quiz => quiz.id === data.quizId);
+                
+                if (quizIndex !== -1) {
+                    newRoom.quizzes[quizIndex].last_studied_at = data.lastStudiedAt;
+                }
+                
+                return newRoom;
+            });
+        });
+
+        newSocket.on('quizGenerationError', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                if (newRoom.quizzes) {
+                    newRoom.quizzes = newRoom.quizzes.filter(quiz => quiz.questions && quiz.questions.length > 0);
+                }
+                return newRoom;
+            });
+            alert(data.message);
+        });
+
+        newSocket.on('deckGenerationError', (data) => {
+            setRoom(prevRoom => {
+                let newRoom = JSON.parse(JSON.stringify(prevRoom));
+                if (newRoom.decks) {
+                    newRoom.decks = newRoom.decks.filter(deck => deck.flashcards && deck.flashcards.length > 0);
+                }
+                return newRoom;
+            });
+            alert(data.message);
         });
 
     }, [roomId, setView]);

@@ -1,3 +1,137 @@
+@import "../../variables.module.scss";
+
 .quizStudyView {
-  // Add your styles
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.25rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--background-dark);
+
+    h2 {
+        margin: 0;
+        margin-left:1rem;
+        font-size: 1.5rem;
+        text-align:center;
+        max-width: 70%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.timer {
+    font-family: monospace;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    background: var(--background-light);
+    border-radius: 0.25rem;
+}
+
+.questions {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    padding-top:1rem;
+    flex-direction: column;
+    scrollbar-width: thin;
+    scrollbar-color: var(--background-dark) var(--background-light);
+}
+
+.actions {
+    display: flex;
+    margin-bottom:1.5rem;
+    justify-content: space-between;
+    padding: 1.5rem 1rem 0 1rem;
+    border-top: 1px solid var(--background-dark);
+}
+
+.countdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .countdownNumber {
+        font-size: 6rem;
+        font-weight: bold;
+        animation: pulse 1s infinite;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loadingContent {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+}
+
+.spinner {
+    border: 0.25rem solid var(--background-color);
+    border-top: 0.25rem solid var(--primary-color);
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.option {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background: var(--background-tertiary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--background-hover);
+    }
+
+    &.selected {
+        background: var(--primary-color);
+        color: var(--text-light);
+    }
 } 

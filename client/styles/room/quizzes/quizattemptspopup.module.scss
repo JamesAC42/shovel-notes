@@ -1,0 +1,61 @@
+.quizAttemptsPopup {
+    padding: 2rem;
+    max-width: 37.5rem;
+    width: 100%;
+    background: var(--background-color);
+    border-radius: 0.75rem;
+    box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+
+    border:2px solid var(--primary-color);
+
+    h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+}
+
+.loading, .noAttempts {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.attemptsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 31.25rem;
+    overflow-y: auto;
+}
+
+.attemptItem {
+    background: var(--background-dark);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: translateY(-0.125rem);
+        background: var(--background-tertiary);
+    }
+}
+
+.attemptHeader {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.attemptScore {
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.attemptStats {
+    display: flex;
+    gap: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+} 

@@ -184,6 +184,9 @@ const { updateQuiz } = require('./controllers/quizzes/updateQuiz');
 const { deleteQuiz } = require('./controllers/quizzes/deleteQuiz');
 const { createQuizFromNotes } = require('./controllers/quizzes/createQuizFromNotes');
 const { deleteQuizQuestion } = require('./controllers/quizzes/deleteQuizQuestion');
+const { submitQuizAttempt } = require('./controllers/quizzes/submitQuizAttempt');
+const { getQuizAttempts } = require('./controllers/quizzes/getQuizAttempts');
+const { getQuizAttemptDetails } = require('./controllers/quizzes/getQuizAttemptDetails');
 
 // Routes
 app.post('/notebook/page', (req, res) => createNotebookPage(req, res, io));
@@ -218,6 +221,9 @@ app.put('/quizzes/update', (req, res) => updateQuiz(req, res, io));
 app.post('/quizzes/delete', (req, res) => deleteQuiz(req, res, io));
 app.post('/quizzes/createFromNotes', (req, res) => createQuizFromNotes(req, res, io, redis));
 app.delete('/quizzes/question/delete', (req, res) => deleteQuizQuestion(req, res, io));
+app.post('/quizzes/submit', (req, res) => submitQuizAttempt(req, res, io));
+app.get('/quizzes/attempts/:quizId', getQuizAttempts);
+app.get('/quizzes/attempts/:quizId/:attemptId', getQuizAttemptDetails);
 
 io.on('connection', handleConnection);
 

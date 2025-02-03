@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import ViewContext from '../contexts/ViewContext';
 import NewDeckPopup from './room/decks/NewDeckPopup';
 import NewQuizPopup from './room/quizzes/NewQuizPopup';
+import QuizAttemptsPopup from './room/quizzes/QuizAttemptsPopup';
 import Popup from './Popup';
 
 const PopupManager = () => {
@@ -16,6 +17,7 @@ const PopupManager = () => {
         let oldView = JSON.parse(JSON.stringify(view));
         oldView.showNewDeckPopup = false;
         oldView.showNewQuizPopup = false;
+        oldView.showQuizAttemptsPopup = false;
         
         setView(oldView);
     }
@@ -25,6 +27,8 @@ const PopupManager = () => {
             setActivePopup(<NewDeckPopup />);
         } else if(view.showNewQuizPopup) {
             setActivePopup(<NewQuizPopup />);
+        } else if(view.showQuizAttemptsPopup) {
+            setActivePopup(<QuizAttemptsPopup quizId={view.activeQuiz} />);
         } else {
             setActivePopup(null);
         }

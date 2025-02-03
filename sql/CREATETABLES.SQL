@@ -183,6 +183,7 @@ CREATE TABLE quiz_attempt_answers
     is_correct boolean,
     ai_feedback text,
     points_awarded numeric(5,2),
+    user_selected boolean NOT NULL DEFAULT false,
     CONSTRAINT quiz_attempt_answers_pkey PRIMARY KEY (id),
     CONSTRAINT quiz_attempt_answers_attempt_question_id_fkey FOREIGN KEY (attempt_question_id)
         REFERENCES public.quiz_attempt_questions (id) MATCH SIMPLE

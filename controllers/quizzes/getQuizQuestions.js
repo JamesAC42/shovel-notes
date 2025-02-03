@@ -1,6 +1,7 @@
-const { Quiz, QuizQuestion, QuizAnswer, User } = require('../../models');
+const { Quiz, QuizQuestion, QuizAnswer, User, QuizAttempt } = require('../../models');
 const getSession = require('../../utilities/getSession');
 const userInRoom = require('../../utilities/userInRoom');
+const { Sequelize } = require('sequelize');
 
 async function getQuizQuestions(req, res) {
   try {
@@ -23,6 +24,16 @@ async function getQuizQuestions(req, res) {
     if (!isUserInRoom) {
       return res.status(403).json({ success: false, message: 'User not authorized to access this quiz' });
     }
+
+    // Get attempts statistics
+    const attemptStats = await QuizAttempt.findOne({
+      where: { quiz_id: quizId },
+      attributes: [
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'attemptCount'],
+        [Sequelize.fn('AVG', Sequelize.col('overall_score')), 'averageScore'],
+        [Sequelize.fn('COUNT', Sequelize.col('overall_score')), 'scoresCount']
+      ]
+    });
 
     const lastEditor = await User.findByPk(quiz.last_edited_by);
     const lastEditorUsername = lastEditor ? lastEditor.username : '-';
@@ -51,7 +62,12 @@ async function getQuizQuestions(req, res) {
     res.status(200).json({ 
       success: true, 
       questions: transformedQuestions,
-      last_edited_by_username: lastEditorUsername
+      last_edited_by_username: lastEditorUsername,
+      stats: {
+        attemptCount: parseInt(attemptStats.getDataValue('attemptCount')) || 0,
+        averageScore: parseFloat(attemptStats.getDataValue('averageScore')) || 0,
+        scoresCount: parseInt(attemptStats.getDataValue('scoresCount')) || 0
+      }
     });
   } catch (error) {
     console.error('Error in getQuizQuestions:', error);

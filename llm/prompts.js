@@ -79,4 +79,56 @@ DO NOT reply in anything other than the output JSON.
 
 }
 
-module.exports = prompts;
+const gradeQuizSystem = "You are an expert quiz grader. Grade open-ended responses fairly and provide constructive feedback.";
+
+const gradeQuizUser_1 = `
+<task>
+Grade these open-ended quiz responses. For each question, provide:
+1. Detailed feedback explaining what was correct/incorrect
+2. A score from 0-1 (in 0.25 increments) based on accuracy
+</task>
+
+<format>
+Return a JSON array of objects with this structure:
+{
+    "question_id": number,
+    "feedback": "string explaining what was right/wrong",
+    "points": number (0-1)
+}
+
+ONLY reply with the output JSON, starting with { and ending with }. Do not include any other text or comments.
+</format>
+
+<questions>
+`;
+
+const gradeQuizUser_2 = `
+</questions>`;
+
+const overallFeedbackSystem = "You are an expert educational assessor. Provide constructive and encouraging feedback.";
+
+const overallFeedbackUser_1 = `
+<task>
+Provide comprehensive feedback for this quiz attempt. Include:
+1. Overall assessment of performance
+2. Specific strengths demonstrated
+3. Areas for improvement
+4. Constructive suggestions for future study
+Limit response to 2 paragraphs.
+</task>
+
+<quiz_summary>
+`;
+
+const overallFeedbackUser_2 = `
+</quiz_summary>`;
+
+module.exports = {
+    ...prompts,
+    gradeQuizSystem,
+    gradeQuizUser_1,
+    gradeQuizUser_2,
+    overallFeedbackSystem,
+    overallFeedbackUser_1,
+    overallFeedbackUser_2
+};

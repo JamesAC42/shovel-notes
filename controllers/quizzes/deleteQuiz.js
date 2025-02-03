@@ -1,4 +1,4 @@
-const { Quiz, QuizQuestion, QuizAnswer } = require('../../models');
+const { Quiz, QuizQuestion, QuizAnswer, QuizAttempt, QuizAttemptQuestion, QuizAttemptAnswer } = require('../../models');
 const getSession = require('../../utilities/getSession');
 const userInRoom = require('../../utilities/userInRoom');
 
@@ -19,6 +19,36 @@ async function deleteQuiz(req, res, io) {
     if (!isUserInRoom) {
       return res.status(403).json({ success: false, message: 'User not authorized to delete this quiz' });
     }
+
+    // Find all quiz attempts for this quiz
+    const attempts = await QuizAttempt.findAll({
+      where: { quiz_id: quizId }
+    });
+
+    // Delete all attempt data
+    for (const attempt of attempts) {
+      // Find all attempt questions
+      const attemptQuestions = await QuizAttemptQuestion.findAll({
+        where: { attempt_id: attempt.id }
+      });
+
+      // Delete all attempt answers for each attempt question
+      for (const attemptQuestion of attemptQuestions) {
+        await QuizAttemptAnswer.destroy({
+          where: { attempt_question_id: attemptQuestion.id }
+        });
+      }
+
+      // Delete all attempt questions
+      await QuizAttemptQuestion.destroy({
+        where: { attempt_id: attempt.id }
+      });
+    }
+
+    // Delete all attempts
+    await QuizAttempt.destroy({
+      where: { quiz_id: quizId }
+    });
 
     // Find all questions
     const questions = await QuizQuestion.findAll({

@@ -102,8 +102,6 @@ const QuestionItem = ({ question, onUpdate, quizId }) => {
         );
     };
 
-    console.log(question);
-
     return (
         <>
             <div 
