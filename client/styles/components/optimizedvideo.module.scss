@@ -1,0 +1,78 @@
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &:hover {
+    .controls {
+      opacity: 1;
+    }
+  }
+}
+
+.videoContainer {
+  position: relative;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  background-color: #e5e7eb;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+.controls {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 20;
+
+  @media (max-width: 40rem) {
+    opacity: 1;
+  }
+}
+
+.controlsInner {
+  display: flex;
+  gap: 1rem;
+  padding: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 9999px;
+}
+
+.controlButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: color 0.2s ease;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  line-height: 0;
+  
+  &:hover {
+    color: #60a5fa;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+} 
