@@ -9,7 +9,7 @@ import setSavedCustomThemeColors from '../utilities/setSavedCustomThemeColors';
 export default function App({ Component, pageProps }) {
 
     const [theme, setTheme] = useState('default');
-    const [userInfo, setUserInfo] = useState(null);
+    const [userInfo, setUserInfo] = useState(undefined);
     const [view, setView] = useState({
         showCustomThemePicker: false
     });
@@ -27,6 +27,36 @@ export default function App({ Component, pageProps }) {
         }
 
     }, [theme]);
+
+    // New useEffect to fetch the current user session info from the /user endpoint
+    useEffect(() => {
+      let mounted = true;
+
+      async function fetchUserSession() {
+        try {
+          const res = await fetch('/api/user');
+          if (!mounted) return;
+          
+          const data = await res.json();
+          if (data.success) {
+            setUserInfo(data.userData);
+          } else {
+            setUserInfo(null);
+          }
+        } catch (error) {
+          console.error('Error fetching user session info:', error);
+          if (mounted) {
+            setUserInfo(null);
+          }
+        }
+      }
+
+      fetchUserSession();
+
+      return () => {
+        mounted = false;
+      };
+    }, []);
 
     return (
         <ThemeContext.Provider value={{theme, setTheme}}>

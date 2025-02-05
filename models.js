@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('./database');
+const {sequelize, sequelizeShovel} = require('./database');
 
-const User = sequelize.define('User', {
+const User = sequelizeShovel.define('User', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -49,7 +49,7 @@ const User = sequelize.define('User', {
 });
 
 
-const Room = sequelize.define('Room', {
+const Room = sequelizeShovel.define('Room', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -67,7 +67,7 @@ const Room = sequelize.define('Room', {
 });
 
 
-const RoomUser = sequelize.define('RoomUser', {
+const RoomUser = sequelizeShovel.define('RoomUser', {
     room: {
         type: DataTypes.INTEGER,
         primaryKey: true,

@@ -9,10 +9,13 @@ import { Pages } from '../../constants/Pages';
 import SocketHandler from '../../components/room/SocketHandler';
 import PopupManager from '../../components/PopupManager';
 import Head from 'next/head';
-
+import { FaList, FaSeedling } from 'react-icons/fa';
+import Link from 'next/link';
+import { TbShovel,TbListDetails, TbDeviceLaptop } from "react-icons/tb";
 // Import main content components
 import NotesContent from '../../components/room/notes/NotesContent';
 import SettingsContent from '../../components/room/settings/SettingsContent';
+
 import DecksContent from '../../components/room/decks/DecksContent';
 import QuizzesContent from '../../components/room/quizzes/QuizzesContent';
 import TutorContent from '../../components/room/tutor/TutorContent';
@@ -27,14 +30,20 @@ import QuizzesNavigation from '../../components/room/quizzes/QuizzesNavigation';
 const Room = () => {
   const router = useRouter();
   const { id } = router.query;
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const [activeSection, setActiveSection] = useState(Pages.NOTES);
 
-  const {setUserInfo} = useContext(UserContext);
   const [room, setRoom] = useState({});
 
   const [activePage, setActivePage] = useState(null);
 
   const {view, setView} = useContext(ViewContext);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [authChecked, setAuthChecked] = useState(false);
 
   const handleSetActiveSection = (section) => {
 
@@ -62,27 +71,64 @@ const Room = () => {
   }
 
   useEffect(() => {
+    if (userInfo === undefined) return;
+    
+    setAuthChecked(true);
+    
+    if (userInfo === null) {
+      router.push('/login');
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    if (!id || !authChecked || !userInfo) return;
+
     const fetchRoom = async () => {
       try {
-        const response = await axios.get(`/api/room?id=${id}&getUser=true`);
-        if(!response.data.success) {
-          console.log("Room not found");
-          router.push('/');
+        setIsLoading(true);
+        const response = await axios.get(`/api/room?id=${id}`);
+        if (!response.data.success) {
+          if (response.data.notAuthenticated) {
+            router.push('/login');
+          } else {
+            router.push('/notebooks');
+          }
           return;
-        } else {
-          setUserInfo(response.data.userInfo);
-          setRoom(response.data.room);
         }
+        setRoom(response.data.room);
       } catch (error) {
-        router.push('/');
         console.error('Error fetching room:', error);
+        router.push('/notebooks');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (id) {
-      fetchRoom();
+    fetchRoom();
+  }, [id, authChecked, userInfo]);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post('/api/auth/logout');
+      if (response.data.success) {
+        setUserInfo(null);
+        router.push('/login');
+      }
+    } catch (error) {
+      console.error('Error logging out:', error);
     }
-  }, [id]);
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -121,26 +167,52 @@ const Room = () => {
         <title>shovel - notebook</title>
         <link rel="icon" href="/favicon.ico" />                
       </Head>
-      <div className={styles.room}>
-        <CustomThemePicker />
-        <PopupManager />
+      {!authChecked || isLoading ? (
+        <div className={styles.loading}>Loading...</div>
+      ) : (
+        <div className={styles.room}>
+          {isMobile && (
+            <div className={styles.mobileOverlay}>
+              <div className={styles.mobileOverlayContent}>
+                <TbDeviceLaptop size={48} />
+                <h2>Desktop Only</h2>
+                <p>shovel notebooks are currently optimized for desktop and laptop devices.</p>
+                <p>Please switch to a larger screen to continue.</p>
+                <Link href="/notebooks" className={styles.backButton}>
+                  ← Back to Notebooks
+                </Link>
+              </div>
+            </div>
+          )}
+          <CustomThemePicker />
+          <PopupManager />
 
-        <div className={styles.nav}>
-          <a href={`https://ovel.sh/room/${id}`}>{"<"} Back to Room</a>
-          <ThemePicker invert={true}/>
-        </div>
+          <div className={styles.nav}>
+            <div className={styles.navLinks}>
+              <Link href="/notebooks" className={styles.navLink}>
+                <TbListDetails />
+              </Link>
+              <Link href={`https://ovel.sh/room/${id}`} className={styles.navLink}>
 
-        <Navigation 
-          activeSection={activeSection} 
-          setActiveSection={handleSetActiveSection}
-          setActivePage={setActivePage} />
+                <TbShovel />
+              </Link>
+            </div>
 
-        <div className={styles.contentCover}>
-          <div className={styles.contentOuter}>
-            {renderContent()}
+            <ThemePicker invert={true}/>
+          </div>
+
+          <Navigation 
+            activeSection={activeSection} 
+            setActiveSection={handleSetActiveSection}
+            setActivePage={setActivePage} />
+
+          <div className={styles.contentCover}>
+            <div className={styles.contentOuter}>
+              {renderContent()}
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <SocketHandler roomId={id} />
     </RoomContext.Provider>
   );

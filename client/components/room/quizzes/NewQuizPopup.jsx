@@ -130,7 +130,7 @@ const NewQuizPopup = () => {
             return (
                 <p>
                     You've reached your limit of 5 free quiz generations.
-                    <a href="https://ovel.sh/premium">Upgrade to Premium</a>
+                    <a href="https://notes.ovel.sh/pricing">Upgrade to Premium</a>
                     to generate unlimited quizzes.
                 </p>
             );

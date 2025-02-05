@@ -1,0 +1,93 @@
+.paymentPage {
+    min-height: 100vh;
+    background: var(--background-color);
+    color: var(--text-color);
+    font-family: 'GeistMono', monospace;
+
+    .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 4rem);
+        padding: 2rem;
+
+        .card {
+            background: var(--background-slightly-dark);
+            padding: 3rem;
+            border-radius: 1rem;
+            text-align: center;
+            max-width: 30rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.5s ease-out;
+
+            .icon {
+                font-size: 4rem;
+                margin-bottom: 1.5rem;
+                color: var(--success-color);
+
+                &.error {
+                    color: var(--error-color);
+                }
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            p {
+                font-size: 1rem;
+                line-height: 1.5;
+                margin-bottom: 1.5rem;
+                opacity: 0.8;
+            }
+
+            .redirect {
+                font-size: 0.875rem;
+                color: var(--text-color-light);
+                margin-bottom: 2rem;
+            }
+
+            .button {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1.5rem;
+                background: var(--primary-color);
+                color: var(--background-color);
+                text-decoration: none;
+                border-radius: 0.5rem;
+                font-size: 1rem;
+                transition: all 0.2s ease;
+
+                &:hover {
+                    background: var(--secondary-color);
+                    transform: translateY(-0.125rem);
+                }
+
+                &:active {
+                    transform: translateY(0);
+                }
+
+                svg {
+                    font-size: 1.25rem;
+                }
+            }
+        }
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 

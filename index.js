@@ -8,6 +8,15 @@ const redisConfig = require('./config/redis.json');
 const Redis = require('ioredis');
 const env = require('./config/env.json');
 const { Server } = require('socket.io');
+const authCheck = require('./middleware/authCheck');
+const login = require('./controllers/auth/login');
+const register = require('./controllers/auth/register');
+const googleLogin = require('./controllers/auth/googleLogin');
+const logout = require('./controllers/auth/logout');
+const { createNotebook } = require('./controllers/post/notebook/createNotebook');
+
+const stripeLogin = require('./stripe_key.json');
+const stripe = require('stripe')(stripeLogin.key);
 
 const app = express();
 const httpServer = http.createServer(app);
@@ -22,6 +31,14 @@ let redis = new Redis({
     password: redisConfig.password
 });
 
+redis.on('connect', () => {
+  console.log('Connected to Redis');
+});
+
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err);
+});
+
 app.use(express.json());
 app.use(
   session({
@@ -32,7 +49,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: env.secureSession, 
-      domain: 'ovel.sh',
+      domain: env.local ? undefined : 'ovel.sh',
       path:'/',
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000
@@ -188,18 +205,34 @@ const { submitQuizAttempt } = require('./controllers/quizzes/submitQuizAttempt')
 const { getQuizAttempts } = require('./controllers/quizzes/getQuizAttempts');
 const { getQuizAttemptDetails } = require('./controllers/quizzes/getQuizAttemptDetails');
 
+const { getUserRooms } = require('./controllers/get/user/getUserRooms');
+const { createCheckoutSession } = require('./controllers/createCheckoutSession');
+
+// Auth routes
+app.post('/auth/login', login);
+app.post('/auth/register', register);
+app.post('/auth/googleLogin', (req, res) => googleLogin(req, res));
+app.post('/auth/logout', logout);
+
+app.post('/createCheckoutSession', async (req, res) => {
+  createCheckoutSession(req, res, stripe, redis);
+});
+
 // Routes
-app.post('/notebook/page', (req, res) => createNotebookPage(req, res, io));
-app.delete('/notebook/page', (req, res) => deleteNotebookPage(req, res, io));
-app.put('/notebook/renamePage', (req, res) => renameNotebookPage(req, res, io));
-app.put('/notebook/updatePageContent', (req, res) => updateNotebookPageContent(req, res, io));
+app.post('/notebook/page', authCheck, (req, res) => createNotebookPage(req, res, io));
+app.delete('/notebook/page', authCheck, (req, res) => deleteNotebookPage(req, res, io));
+app.put('/notebook/renamePage', authCheck, (req, res) => renameNotebookPage(req, res, io));
+app.put('/notebook/updatePageContent', authCheck, (req, res) => updateNotebookPageContent(req, res, io));
 
 app.get('/user', getUser);
+app.get('/user/rooms', authCheck, getUserRooms);
 app.get('/room', (req, res) => getRoom(req, res, redis));
 
-app.get('/notebook/folder/:id', getFolderContent);
-app.get('/notebook/page/:id', getPageContent);
-app.get('/notebook/allPages/:roomId', getAllPages);
+app.get('/notebook/folder/:id', authCheck, getFolderContent);
+app.get('/notebook/page/:id', authCheck, getPageContent);
+app.get('/notebook/allPages/:roomId', authCheck, getAllPages);
+
+app.post('/notebook/create', authCheck, createNotebook);
 
 app.get('/decks/get', getAllDecksInRoom);
 app.post('/decks/create', (req, res) => createDeck(req, res, io));

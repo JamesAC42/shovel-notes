@@ -129,7 +129,7 @@ const NotesNavigation = ({setActivePage}) => {
           showMaxPagesReached ?
           <div className={styles.maxPagesReached}>
             You've reached the maximum number of pages for your tier. 
-            <a href="https://ovel.sh/premium">Upgrade to create unlimited pages.</a>
+            <a href="https://notes.ovel.sh/pricing">Upgrade to create unlimited pages.</a>
           </div>
           : null
         }

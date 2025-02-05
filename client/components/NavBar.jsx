@@ -1,10 +1,30 @@
 import Link from 'next/link';
 import styles from '../styles/navbar.module.scss';
 import ThemePicker from './ThemePicker';
-import { FaBook, FaHome, FaDollarSign } from 'react-icons/fa';
+import { FaBook, FaHome, FaDollarSign, FaSignOutAlt } from 'react-icons/fa';
 import { IoMail } from 'react-icons/io5';
+import { useContext } from 'react';
+import UserContext from '../contexts/UserContext';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 function NavBar() {
+    const { userInfo, setUserInfo } = useContext(UserContext);
+    const router = useRouter();
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('/api/auth/logout');
+            if (response.data.success) {
+                setUserInfo(null);
+                router.push('/login');
+            }
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
+
     return (
         <nav className={styles.navbar}>
             <div className={styles.navContent}>
@@ -31,6 +51,12 @@ function NavBar() {
                         <IoMail />
                         <span>Contact</span>
                     </Link>
+                    {userInfo && (
+                        <a href="#" onClick={handleLogout} className={styles.navLink}>
+                            <FaSignOutAlt />
+                            <span>Logout</span>
+                        </a>
+                    )}
                 </div>
 
                 <div className={styles.navRight}>

@@ -14,7 +14,11 @@ async function getRoom(req, res, redis) {
         const getUserInfo = req.query.getUser === 'true';
 
         if (!user) {
-            return res.status(401).json({ success: false, message: 'User not authenticated' });
+            return res.status(401).json({ 
+                success: false, 
+                message: 'User not authenticated',
+                notAuthenticated: true 
+            });
         }
 
         const roomId = req.query.id;
@@ -25,7 +29,11 @@ async function getRoom(req, res, redis) {
         // Check if user is in room
         const usersInRoom = await getUsersInRoom(roomId);
         if(!usersInRoom[user.id]) {
-            return res.status(403).json({ success: false, message: 'User is not a member of this room' });
+            return res.status(403).json({ 
+                success: false, 
+                message: 'User is not a member of this room',
+                notAuthorized: true 
+            });
         }
 
         // Get room info and contents
@@ -87,7 +95,11 @@ async function getRoom(req, res, redis) {
 
     } catch (error) {
         console.error('Error in getRoom:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        res.status(500).json({ 
+            success: false, 
+            message: 'Internal server error',
+            error: error.message 
+        });
     }
 }
 

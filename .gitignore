@@ -33,6 +33,9 @@ Thumbs.db
 /config/redis.json
 /database/flashcards.json
 
+google_auth.json
+stripe_key.json
+
 package-lock.json
 env.json
 psql.json

@@ -10,6 +10,7 @@ const SettingsNavigation = () => {
   const {room} = useContext(RoomContext);
 
   if(!userInfo) return null;
+  if(Object.keys(room).length === 0) return null;
   return (
     <div className={styles.navigationSectionContent}>
         <div className={styles.navigationSectionContentInner}>

@@ -5,4 +5,11 @@ const sequelize = new Sequelize(`postgres://${psqlLogin.username}:${psqlLogin.pa
     logging:false
 });
 
-module.exports = sequelize;
+const sequelizeShovel = new Sequelize(`postgres://${psqlLogin.username}:${psqlLogin.password}@localhost:5432/shovel`, {
+    logging: false
+});
+
+module.exports = {
+    sequelize,
+    sequelizeShovel
+}

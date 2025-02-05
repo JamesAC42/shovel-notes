@@ -186,7 +186,7 @@ const NewDeckPopup = () => {
                         userInfo.tier === 1 && room.limits ?
                         <div className={styles.freeDeckGenerations}>
                             {5 - (room.limits.freeDeckGenerations || 0)} free generation{(room.limits.freeDeckGenerations || 0) === 4 ? "" : "s"} remaining.
-                            <a href="https://ovel.sh/premium">Upgrade to Premium</a> 
+                            <a href="https://notes.ovel.sh/pricing">Upgrade to Premium</a> 
                             to generate unlimited decks.
                         </div> : null
                     }
